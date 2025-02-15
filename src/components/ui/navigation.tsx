@@ -61,7 +61,7 @@ export default function Navigation() {
                 <ListItem
                   key={component.title}
                   title={component.title}
-                  href="/"
+                  href={component.href}
                 >
                   {component.description}
                 </ListItem>
@@ -78,7 +78,7 @@ export default function Navigation() {
                 <ListItem
                   key={component.title}
                   title={component.title}
-                  href="/"
+                  href={component.href}
                 >
                   {component.description}
                 </ListItem>

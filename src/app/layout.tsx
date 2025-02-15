@@ -36,7 +36,7 @@ export default function RootLayout({
         <ThemeProvider>
           <NextTopLoader />
           <NavbarSection />
-          {children}
+          <div className="w-full max-w-screen-xl mx-auto p-5">{children}</div>
           <FooterSection />
         </ThemeProvider>
       </body>
