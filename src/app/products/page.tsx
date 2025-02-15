@@ -8,7 +8,6 @@ export default function Page() {
     <div>
       <h1>Products</h1>
       <DataTable columns={productTableColumns} data={productsMock} />
-      <div className="h-screen"></div>
     </div>
   );
 }
