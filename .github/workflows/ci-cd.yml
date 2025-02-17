@@ -37,6 +37,7 @@ jobs:
             echo "tag=latest" >> $GITHUB_OUTPUT
           else
             echo "tag=staging" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build and Push LOS Lender Portal
         uses: docker/build-push-action@v6
