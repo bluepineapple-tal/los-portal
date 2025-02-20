@@ -50,11 +50,15 @@ jobs:
       - name: Portainer - Login
         id: portainer_login
         run: |
+          JSON_PAYLOAD=$(jq -n --arg user "${{ secrets.PORTAINER_USER }}" --arg pass "${{ secrets.PORTAINER_PASSWORD }}" \
+            '{Username: $user, Password: $pass}')
+
           curl -s -X POST \
             -H "Content-Type: application/json" \
-            -d '{"Username":"'${{ secrets.PORTAINER_PASSWORD }}'","Password":"'${{ secrets.PORTAINER_PASSWORD }}'"}' \
+            -d "$JSON_PAYLOAD" \
             https://portainer.middle-earth.in/api/auth \
             > response.json
+
 
           TOKEN=$(cat response.json | jq -r .jwt)
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
