@@ -57,8 +57,11 @@ jobs:
 
       - name: Portainer - Login
         id: portainer_login
+        env:
+          PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+          PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
         run: |
-          JSON_PAYLOAD=$(jq -n --arg user "${{ secrets.PORTAINER_USER }}" --arg pass "${{ secrets.PORTAINER_PASSWORD }}" \
+          JSON_PAYLOAD=$(jq -n --arg user "$PORTAINER_USER" --arg pass "$PORTAINER_PASSWORD" \
             '{Username: $user, Password: $pass}')
 
           echo "Sending Payload: $JSON_PAYLOAD"
