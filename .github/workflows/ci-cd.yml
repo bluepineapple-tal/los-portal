@@ -47,54 +47,54 @@ jobs:
           tags: |
             ghcr.io/bluepineapple-tal/los-lender-portal:${{ steps.getTag.outputs.tag }}
 
-      - name: Debug Secrets
-        run: |
-          echo "PORTAINER_USER length: ${#PORTAINER_USER}"
-          echo "PORTAINER_PASSWORD length: ${#PORTAINER_PASSWORD}"
-        env:
-          PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
-          PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      # - name: Debug Secrets
+      #   run: |
+      #     echo "PORTAINER_USER length: ${#PORTAINER_USER}"
+      #     echo "PORTAINER_PASSWORD length: ${#PORTAINER_PASSWORD}"
+      #   env:
+      #     PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      #     PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
 
-      - name: Portainer - Login
-        id: portainer_login
-        env:
-          PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
-          PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
-        run: |
-          JSON_PAYLOAD=$(jq -n --arg user "$PORTAINER_USER" --arg pass "$PORTAINER_PASSWORD" \
-            '{Username: $user, Password: $pass}')
+      # - name: Portainer - Login
+      #   id: portainer_login
+      #   env:
+      #     PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      #     PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      #   run: |
+      #     JSON_PAYLOAD=$(jq -n --arg user "$PORTAINER_USER" --arg pass "$PORTAINER_PASSWORD" \
+      #       '{Username: $user, Password: $pass}')
 
-          echo "Sending Payload: $JSON_PAYLOAD"
+      #     echo "Sending Payload: $JSON_PAYLOAD"
 
-          curl -s --ipv4 -X POST \
-            -H "Content-Type: application/json" \
-            -d "$JSON_PAYLOAD" \
-            https://portainer.middle-earth.in/api/auth \
-            -o response.json
+      #     curl -s --ipv4 -X POST \
+      #       -H "Content-Type: application/json" \
+      #       -d "$JSON_PAYLOAD" \
+      #       https://portainer.middle-earth.in/api/auth \
+      #       -o response.json
 
-          echo "Portainer API Response:"
-          cat response.json
+      #     echo "Portainer API Response:"
+      #     cat response.json
 
-          # Extract token only if response contains "jwt"
-          if grep -q '"jwt"' response.json; then
-            TOKEN=$(cat response.json | jq -r .jwt)
-            echo "token=$TOKEN" >> $GITHUB_OUTPUT
-          else
-            echo "Error: Portainer authentication failed. Response:"
-            cat response.json
-            exit 1
-          fi
+      #     # Extract token only if response contains "jwt"
+      #     if grep -q '"jwt"' response.json; then
+      #       TOKEN=$(cat response.json | jq -r .jwt)
+      #       echo "token=$TOKEN" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "Error: Portainer authentication failed. Response:"
+      #       cat response.json
+      #       exit 1
+      #     fi
 
-      - name: Portainer - Redeploy Staging
-        if: github.ref_name == 'develop'
-        run: |
-          curl -i -X POST \
-            -H "Authorization: Bearer ${{ steps.portainer_login.outputs.token }}" \
-            "https://portainer.middle-earth.in/api/stacks/2/redeploy?endpointId=1"
+      # - name: Portainer - Redeploy Staging
+      #   if: github.ref_name == 'develop'
+      #   run: |
+      #     curl -i -X POST \
+      #       -H "Authorization: Bearer ${{ steps.portainer_login.outputs.token }}" \
+      #       "https://portainer.middle-earth.in/api/stacks/2/redeploy?endpointId=1"
 
-      - name: Portainer - Redeploy Production
-        if: github.ref_name == 'main'
-        run: |
-          curl -i -X POST \
-            -H "Authorization: Bearer ${{ steps.portainer_login.outputs.token }}" \
-            "https://portainer.middle-earth.in/api/stacks/3/redeploy?endpointId=1"
+      # - name: Portainer - Redeploy Production
+      #   if: github.ref_name == 'main'
+      #   run: |
+      #     curl -i -X POST \
+      #       -H "Authorization: Bearer ${{ steps.portainer_login.outputs.token }}" \
+      #       "https://portainer.middle-earth.in/api/stacks/3/redeploy?endpointId=1"
