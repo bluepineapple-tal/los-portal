@@ -4,6 +4,7 @@ import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
+import { SuperTokensProvider } from "@/components/contexts/supertokensProvider";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
 import FooterSection from "@/components/sections/footer/default";
 import NavbarSection from "@/components/sections/navbar/default";
@@ -33,12 +34,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background antialiased`}
       >
-        <ThemeProvider>
-          <NextTopLoader />
-          <NavbarSection />
-          <div className="w-full max-w-screen-xl mx-auto p-5">{children}</div>
-          <FooterSection />
-        </ThemeProvider>
+        <SuperTokensProvider>
+          <ThemeProvider>
+            <NextTopLoader />
+            <NavbarSection />
+            <div className="w-full max-w-screen-xl mx-auto p-5">{children}</div>
+            <FooterSection />
+          </ThemeProvider>
+        </SuperTokensProvider>
       </body>
     </html>
   );
