@@ -39,10 +39,10 @@ jobs:
             echo "tag=staging" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build and Push LOS Lender Portal
+      - name: Build and Push LOS Portal
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/bluepineapple-tal/los-lender-portal:${{ steps.getTag.outputs.tag }}
+            ghcr.io/bluepineapple-tal/los-portal:${{ steps.getTag.outputs.tag }}

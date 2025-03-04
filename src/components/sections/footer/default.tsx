@@ -18,7 +18,7 @@ export default function FooterSection() {
             <FooterColumn className="col-span-2 sm:col-span-3 md:col-span-1">
               <div className="flex items-center gap-2">
                 <LaunchUI />
-                <h3 className="text-xl font-bold">LOS Lender Portal</h3>
+                <h3 className="text-xl font-bold">LOS Portal</h3>
               </div>
             </FooterColumn>
             <FooterColumn>

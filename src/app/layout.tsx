@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LOS Lender Portal",
-  description: "Loan Origination System Lender Portal",
+  title: "LOS Portal",
+  description: "Loan Origination System Portal",
 };
 
 export default function RootLayout({

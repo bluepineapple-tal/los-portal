@@ -73,7 +73,7 @@ export default function NavbarSection() {
               className="flex items-center gap-2 text-xl font-bold"
             >
               <LaunchUI />
-              LOS Lender Portal
+              LOS Portal
             </Link>
 
             <Navigation />
