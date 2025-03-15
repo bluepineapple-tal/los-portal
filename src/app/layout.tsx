@@ -8,6 +8,7 @@ import { SuperTokensProvider } from "@/components/contexts/supertokensProvider";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
 import FooterSection from "@/components/sections/footer/default";
 import NavbarSection from "@/components/sections/navbar/default";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,8 +39,11 @@ export default function RootLayout({
           <ThemeProvider>
             <NextTopLoader />
             <NavbarSection />
-            <div className="w-full max-w-screen-xl mx-auto p-5">{children}</div>
+            <main className="w-full max-w-screen-xl mx-auto p-5">
+              {children}
+            </main>
             <FooterSection />
+            <Toaster />
           </ThemeProvider>
         </SuperTokensProvider>
       </body>
