@@ -17,23 +17,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "../ui/badge";
 import { DataTableColumnHeader } from "../ui/data-table-column-header";
+import { IProductModel, ProductStatus } from "./product.interface";
 
-// This type is used to define the shape of our data.
-export enum ProductStatus {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
-  DISCONTINUED = "discontinued",
-}
-
-interface IProduct {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  status: ProductStatus;
-}
-
-export const productTableColumns: ColumnDef<IProduct>[] = [
+export const productModelTableColumns: ColumnDef<IProductModel>[] = [
   {
     id: "select",
     header: ({ table }) => (

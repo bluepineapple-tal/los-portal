@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createProductSchema } from "@/app/products/create/createProductFormSchema";
+import { createProductMakeSchema } from "@/components/products/create-product-make.schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,6 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { createProductMake } from "@/lib/functions/product-make.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -24,43 +26,55 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { ProductStatus } from "./columns";
+import { ProductStatus } from "./product.interface";
 
-export function CreateProductForm() {
-  // 1. Define the form.
-  const form = useForm<z.infer<typeof createProductSchema>>({
-    resolver: zodResolver(createProductSchema),
+export function CreateProductMakeForm() {
+  const { toast } = useToast();
+
+  // Define the form.
+  const form = useForm<z.infer<typeof createProductMakeSchema>>({
+    resolver: zodResolver(createProductMakeSchema),
     defaultValues: {
       name: "",
       description: "",
-      price: 0,
       status: ProductStatus.INACTIVE,
-      vendorId: "",
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof createProductSchema>) {
-    // Do something with the form values.
+  async function onSubmit(values: z.infer<typeof createProductMakeSchema>) {
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const newMake = await createProductMake(values);
+      toast({
+        style: { backgroundColor: "#4ade80" },
+        title: "Product Make created successfully",
+        description: newMake.name,
+      });
+      // Optionally, navigate somewhere or show a success message
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Error creating product make.",
+        description: error as string,
+      });
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Name */}
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Name</FormLabel>
+              <FormLabel>Make Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., iPhone 15 Pro" {...field} />
+                <Input placeholder="e.g., Apple" {...field} />
               </FormControl>
               <FormDescription>
-                This is the name of your product.
+                This is the name of your product make.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -72,40 +86,15 @@ export function CreateProductForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Description</FormLabel>
+              <FormLabel>Make Description</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="e.g., High-end smartphone with A17 chip"
+                  placeholder="e.g., High-end smartphone company"
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Provide a brief description of your product.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Price */}
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price (₹)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="e.g., 120000"
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(parseFloat(e.target.value) || 0)
-                  }
-                />
-              </FormControl>
-              <FormDescription>
-                Enter the product price (in INR).
+                Provide a brief description of your product make.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -122,7 +111,7 @@ export function CreateProductForm() {
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={ProductStatus.ACTIVE}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select product status" />
@@ -137,32 +126,14 @@ export function CreateProductForm() {
                 </Select>
               </FormControl>
               <FormDescription>
-                Select the current status of the product.
+                Select the current status of the product make.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Vendor ID */}
-        <FormField
-          control={form.control}
-          name="vendorId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Vendor ID</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., UUID of the vendor" {...field} />
-              </FormControl>
-              <FormDescription>
-                Provide the vendor&apos;s unique identifier.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Create Product Make</Button>
       </form>
     </Form>
   );
