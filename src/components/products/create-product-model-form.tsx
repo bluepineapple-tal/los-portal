@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,6 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/lib/constants";
+import { createProductModel } from "@/lib/functions/product-model.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -24,9 +28,26 @@ import {
   SelectValue,
 } from "../ui/select";
 import { createProductModelSchema } from "./create-product-model.schema";
-import { ProductStatus } from "./product.interface";
+import { IProductMake, ProductStatus } from "./product.interface";
 
 export function CreateProductModelForm() {
+  const [makes, setMakes] = useState<IProductMake[]>([]);
+  const { toast } = useToast();
+
+  // Fetch the available product makes on component mount
+  useEffect(() => {
+    async function fetchMakes() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/product-make`);
+        const data = await response.json();
+        setMakes(data);
+      } catch (error) {
+        console.error("Error fetching product makes:", error);
+      }
+    }
+    fetchMakes();
+  }, []);
+
   // Define the form.
   const form = useForm<z.infer<typeof createProductModelSchema>>({
     resolver: zodResolver(createProductModelSchema),
@@ -40,28 +61,54 @@ export function CreateProductModelForm() {
   });
 
   // Define a submit handler.
-  function onSubmit(values: z.infer<typeof createProductModelSchema>) {
-    // Do something with the form values.
+  async function onSubmit(values: z.infer<typeof createProductModelSchema>) {
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const newModel = await createProductModel(values);
+      toast({
+        style: { backgroundColor: "#4ade80" },
+        title: "Product Model created successfully",
+        description: newModel.name,
+      });
+    } catch (error) {
+      console.log("error: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Error creating product model.",
+        description: error instanceof Error ? error.message : (error as string),
+      });
+    }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Make ID */}
+        {/* Product Make Dropdown */}
         <FormField
           control={form.control}
           name="makeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Make ID</FormLabel>
+              <FormLabel>Product Make</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., UUID of the Make" {...field} />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product make" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {makes.map((make) => (
+                      <SelectItem key={make.id} value={make.id}>
+                        {make.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormDescription>
-                Provide the make&apos;s unique identifier to associate the
-                product.
+                Select the product make for this model.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -125,10 +125,9 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
                 Copy product make ID
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={`/products/${productMake.id}`}>
+                <Link href={`/products/${productMake.slug}`}>
                   View product details
                 </Link>
-                {/* TODO: add slug to product make and model tables */}
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />

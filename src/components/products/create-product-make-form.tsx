@@ -55,7 +55,7 @@ export function CreateProductMakeForm() {
       toast({
         variant: "destructive",
         title: "Uh oh! Error creating product make.",
-        description: error as string,
+        description: error instanceof Error ? error.message : (error as string),
       });
     }
   }
