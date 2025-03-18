@@ -15,7 +15,7 @@ import { fetchApi } from "../fetch-api";
 export async function createLoanOffer(
   data: ICreateLoanOffer,
 ): Promise<ILoanOffer> {
-  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offer`, {
+  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers`, {
     method: "POST",
     // @ts-expect-error body init type
     body: data,
