@@ -8,6 +8,7 @@ export enum ProductStatus {
 export interface IProductMake {
   id: string;
   name: string;
+  slug: string;
   description: string;
   status: ProductStatus;
   created_at: Date;
@@ -24,9 +25,18 @@ export interface IProductModel {
   id: string;
   productMake?: IProductMake;
   name: string;
+  slug: string;
   description: string;
   price: number;
   status: ProductStatus;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface ICreateProductModel {
+  makeId: string;
+  name: string;
+  description: string;
+  price: number;
+  status: ProductStatus;
 }

@@ -21,9 +21,9 @@ const productComponents: {
   description: string;
 }[] = [
   {
-    title: "View All Products",
+    title: "View All Product Makes",
     href: "/products/",
-    description: "Browse the complete list of available products.",
+    description: "Browse the complete list of available product makes.",
   },
   {
     title: "Add a New Product",
