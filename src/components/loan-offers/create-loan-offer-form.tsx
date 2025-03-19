@@ -109,7 +109,7 @@ export function CreateLoanOfferForm() {
       tenure_months: 12,
       processing_fee: 0,
       offer_details: "",
-      is_active: true,
+      is_active: false,
     },
   });
 

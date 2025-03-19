@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/ui/data-table";
+import { API_BASE_URL } from "@/lib/constants";
 
 import { ILoanOffer, loanOfferTableColumns } from "./loan-offer-table-columns";
 
@@ -24,10 +25,10 @@ export function LoanOfferList({
         setLoading(true);
         setError(null);
 
-        // Example: /api/loan-offers?makeId=xxx&modelId=yyy
         const response = await fetch(
-          `/api/loan-offers?makeId=${makeId}&modelId=${modelId}`,
+          `${API_BASE_URL}/loan-offers/product-model?modelId=${modelId}`,
         );
+
         if (!response.ok) {
           throw new Error(
             `Failed to fetch loan offers: ${response.statusText}`,
