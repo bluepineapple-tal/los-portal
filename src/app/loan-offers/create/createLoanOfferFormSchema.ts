@@ -2,22 +2,22 @@ import { z } from "zod";
 
 export const createLoanOfferSchema = z.object({
   // The make id to which this offer applies
-  productMakeId: z.string().uuid("Product Make ID must be a valid UUID"),
+  productMakeId: z.string().uuid("Please select a make"),
 
   // The model id to which this offer applies
-  productModelId: z.string().uuid("Product Model ID must be a valid UUID"),
+  productModelId: z.string().uuid("Please select a model"),
 
   // Name/title of the offer
   offer_name: z
     .string()
-    .min(3, { message: "Offer name must be at least 3 characters long" })
-    .max(100, { message: "Offer name must be at most 100 characters long" }),
+    .min(3, { message: "Offer name must contain a minimum of 3 characters" })
+    .max(100, { message: "Offer name must not exceed 100 characters" }),
 
   // Interest rate percentage (e.g., 7.5)
   interest_rate: z
     .number()
-    .min(0.0, { message: "Interest rate must be at least 0.01%" })
-    .max(100, { message: "Interest rate must be at most 100%" })
+    .min(0.0, { message: "Interest rate must not be less than 0%" })
+    .max(100, { message: "Interest rate must not exceed 100%" })
     .multipleOf(0.01, {
       message: "Interest rate must be a valid decimal value",
     }),
@@ -45,5 +45,5 @@ export const createLoanOfferSchema = z.object({
     .optional(),
 
   // Whether the offer is active
-  is_active: z.boolean().default(true),
+  is_active: z.boolean().default(false),
 });
