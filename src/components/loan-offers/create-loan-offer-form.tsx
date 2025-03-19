@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { API_BASE_URL } from "@/lib/constants";
+import { createLoanOffer } from "@/lib/functions/loan-offers.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { IProductMake, IProductModel } from "../products/product.interface";
@@ -29,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { createLoanOffer } from "@/lib/functions/loan-offers.api";
 
 export function CreateLoanOfferForm() {
   // State for all possible Makes (fetched from backend)
@@ -70,30 +70,33 @@ export function CreateLoanOfferForm() {
   }, [toast]);
 
   // 2) When the user selects a Make, fetch the Models for that Make
-  const handleMakeChange = async (newMakeId: string) => {
-    setModels([]); // clear old models
+  const handleMakeChange = useCallback(
+    async (newMakeId: string) => {
+      setModels([]); // clear old models
 
-    if (!newMakeId) return; // if user deselects, do nothing
+      if (!newMakeId) return;
 
-    try {
-      setLoadingModels(true);
-      const response = await fetch(
-        `${API_BASE_URL}/product-model/make/${newMakeId}`,
-      );
-      if (!response.ok) {
-        throw new Error(`Failed to fetch models: ${response.statusText}`);
+      try {
+        setLoadingModels(true);
+        const response = await fetch(
+          `${API_BASE_URL}/product-model/make/${newMakeId}`,
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch models: ${response.statusText}`);
+        }
+        const data = (await response.json()) as IProductModel[];
+        setModels(data);
+      } catch (error) {
+        toast({
+          style: { backgroundColor: "red" },
+          title: error instanceof Error ? error.message : "Error",
+        });
+      } finally {
+        setLoadingModels(false);
       }
-      const data = (await response.json()) as IProductModel[];
-      setModels(data);
-    } catch (error) {
-      toast({
-        style: { backgroundColor: "red" },
-        title: error instanceof Error ? error.message : "Error",
-      });
-    } finally {
-      setLoadingModels(false);
-    }
-  };
+    },
+    [toast],
+  );
 
   // Define the form
   const form = useForm<z.infer<typeof createLoanOfferSchema>>({
@@ -143,8 +146,10 @@ export function CreateLoanOfferForm() {
               <FormControl>
                 <Select
                   onValueChange={(value) => {
-                    handleMakeChange(value);
-                    field.onChange(value);
+                    if (value !== field.value) {
+                      handleMakeChange(value);
+                      field.onChange(value);
+                    }
                   }}
                   defaultValue={field.value}
                 >
