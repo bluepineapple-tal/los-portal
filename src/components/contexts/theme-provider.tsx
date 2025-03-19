@@ -19,8 +19,8 @@ export function ThemeProvider({
   return (
     <NextThemeProvider
       attribute="class"
-      defaultTheme="dark"
-      enableSystem={true}
+      defaultTheme="light"
+      enableSystem={false}
     >
       {children}
     </NextThemeProvider>
