@@ -1,8 +1,11 @@
 import { z } from "zod";
 
 export const createLoanOfferSchema = z.object({
-  // The productId to which this offer applies
-  productId: z.string().uuid("Product ID must be a valid UUID"),
+  // The make id to which this offer applies
+  productMakeId: z.string().uuid("Product Make ID must be a valid UUID"),
+
+  // The model id to which this offer applies
+  productModelId: z.string().uuid("Product Model ID must be a valid UUID"),
 
   // Name/title of the offer
   offer_name: z
@@ -13,7 +16,7 @@ export const createLoanOfferSchema = z.object({
   // Interest rate percentage (e.g., 7.5)
   interest_rate: z
     .number()
-    .min(0.01, { message: "Interest rate must be at least 0.01%" })
+    .min(0.0, { message: "Interest rate must be at least 0.01%" })
     .max(100, { message: "Interest rate must be at most 100%" })
     .multipleOf(0.01, {
       message: "Interest rate must be a valid decimal value",
@@ -24,7 +27,7 @@ export const createLoanOfferSchema = z.object({
     .number()
     .int({ message: "Tenure must be an integer number of months" })
     .min(1, { message: "Tenure must be at least 1 month" })
-    .max(600, { message: "Tenure must be at most 600 months" }),
+    .max(60, { message: "Tenure must be at most 60 months" }),
 
   // Processing fee (can be zero or more, e.g., 999.99)
   processing_fee: z

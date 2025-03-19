@@ -5,20 +5,23 @@ export enum LoanStatus {
 
 export interface ILoanOffer {
   id: string;
-  productId: string;
-  name: string;
-  tenure: number; // in months
-  interestRate: number; // percentage
-  amount: number; // fetched from product
-  status: LoanStatus;
+  productModelId: string;
+  offer_name: string;
+  tenure_months: number; // in months
+  interest_rate: number; // percentage
+  processing_fee: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
 export interface ICreateLoanOffer {
-  productId: string;
-  tenure: number;
-  interestRate: number;
-  amount: number;
-  status: LoanStatus;
+  productMakeId: string;
+  productModelId: string;
+  offer_name: string;
+  interest_rate: number;
+  tenure_months: number;
+  processing_fee: number;
+  offer_details?: string;
+  is_active: boolean;
 }

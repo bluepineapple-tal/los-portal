@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -16,14 +17,90 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { IProductMake, IProductModel } from "../products/product.interface";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { createLoanOffer } from "@/lib/functions/loan-offers.api";
+
 export function CreateLoanOfferForm() {
+  // State for all possible Makes (fetched from backend)
+  const [makes, setMakes] = useState<IProductMake[]>([]);
+  // State for all possible Models for the selected Make
+  const [models, setModels] = useState<IProductModel[]>([]);
+
+  // Loading/error states for each fetch call
+  const [loadingMakes, setLoadingMakes] = useState(true);
+  console.log("loadingMakes: ", loadingMakes);
+  const [loadingModels, setLoadingModels] = useState(false);
+  console.log("loadingModels: ", loadingModels);
+
+  const { toast } = useToast();
+
+  // 1) Fetch all Makes on component mount
+  useEffect(() => {
+    const fetchMakes = async () => {
+      try {
+        setLoadingMakes(true);
+        const response = await fetch(`${API_BASE_URL}/product-make`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch makes: ${response.statusText}`);
+        }
+        const data = (await response.json()) as IProductMake[];
+        setMakes(data);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: error instanceof Error ? error.message : "Error",
+        });
+      } finally {
+        setLoadingMakes(false);
+      }
+    };
+
+    fetchMakes();
+  }, [toast]);
+
+  // 2) When the user selects a Make, fetch the Models for that Make
+  const handleMakeChange = async (newMakeId: string) => {
+    setModels([]); // clear old models
+
+    if (!newMakeId) return; // if user deselects, do nothing
+
+    try {
+      setLoadingModels(true);
+      const response = await fetch(
+        `${API_BASE_URL}/product-model/make/${newMakeId}`,
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch models: ${response.statusText}`);
+      }
+      const data = (await response.json()) as IProductModel[];
+      setModels(data);
+    } catch (error) {
+      toast({
+        style: { backgroundColor: "red" },
+        title: error instanceof Error ? error.message : "Error",
+      });
+    } finally {
+      setLoadingModels(false);
+    }
+  };
+
   // Define the form
   const form = useForm<z.infer<typeof createLoanOfferSchema>>({
     resolver: zodResolver(createLoanOfferSchema),
     defaultValues: {
-      productId: "",
+      productMakeId: "",
+      productModelId: "",
       offer_name: "",
       interest_rate: 0,
       tenure_months: 12,
@@ -34,28 +111,87 @@ export function CreateLoanOfferForm() {
   });
 
   // Define a submit handler
-  const onSubmit = (values: z.infer<typeof createLoanOfferSchema>) => {
+  const onSubmit = async (values: z.infer<typeof createLoanOfferSchema>) => {
     // This will be type-safe & validated by Zod
-    console.log("Loan Offer Form Submitted:", values);
-    // TODO: Make an API request to create the Loan Offer in your BE
+    try {
+      const newLoanOffer = await createLoanOffer(values);
+      toast({
+        style: { backgroundColor: "#4ade80" },
+        title: "Loan Offer created successfully",
+        description: newLoanOffer.offer_name,
+      });
+    } catch (error) {
+      console.log("error: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Error creating Loan Offer.",
+        description: error instanceof Error ? error.message : (error as string),
+      });
+    }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* PRODUCT ID */}
+        {/* Product Make Dropdown */}
         <FormField
           control={form.control}
-          name="productId"
+          name="productMakeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product ID</FormLabel>
+              <FormLabel>Select Make</FormLabel>
               <FormControl>
-                <Input placeholder="UUID of the product" {...field} />
+                <Select
+                  onValueChange={(value) => {
+                    handleMakeChange(value);
+                    field.onChange(value);
+                  }}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product make" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {makes.map((make) => (
+                      <SelectItem key={make.id} value={make.id}>
+                        {make.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription>Select the product make.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Product Model Dropdown */}
+        <FormField
+          control={form.control}
+          name="productModelId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Select Model</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {models.map((model) => (
+                      <SelectItem key={model.id} value={model.id}>
+                        {model.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormDescription>
-                The UUID of the product for which you are creating this loan
-                offer.
+                Select the product model for this model.
               </FormDescription>
               <FormMessage />
             </FormItem>
