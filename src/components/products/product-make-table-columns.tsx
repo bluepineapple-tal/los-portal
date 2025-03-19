@@ -60,6 +60,14 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
+    cell: ({ row }) => {
+      const productMake = row.original;
+      return (
+        <Link href={productMake.slug} className="hover:text-blue-500">
+          {productMake.name}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "description",
