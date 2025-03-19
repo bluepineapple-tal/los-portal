@@ -43,7 +43,7 @@ const loanOfferComponents: {
     description: "Browse the complete list of available loan offers.",
   },
   {
-    title: "Add a New Product",
+    title: "Add a New Loan Offer",
     href: "/loan-offers/create",
     description: "Create and add a new loan offer to the system.",
   },
