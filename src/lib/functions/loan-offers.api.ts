@@ -33,7 +33,7 @@ export async function updateLoanOffer(
   id: string,
   data: Partial<ICreateLoanOffer>,
 ): Promise<ILoanOffer> {
-  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offer/${id}`, {
+  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers/${id}`, {
     method: "PUT",
     // @ts-expect-error body init type
     body: data,
@@ -50,7 +50,7 @@ export async function deleteLoanOffer(
   id: string,
 ): Promise<{ success: boolean; message?: string }> {
   return fetchApi<{ success: boolean; message?: string }>(
-    `${API_BASE_URL}/loan-offer/${id}`,
+    `${API_BASE_URL}/loan-offers/${id}`,
     {
       method: "DELETE",
     },
