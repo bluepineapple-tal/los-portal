@@ -1,5 +1,3 @@
-import { NextPage } from "next";
-
 import { productModelTableColumns } from "@/components/products/product-model-table.columns";
 import {
   IProductMake,
@@ -14,9 +12,13 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { API_BASE_URL } from "@/lib/constants";
 
-const ProductMakePage: NextPage<{ params: { slug: string } }> = async ({
-  params: { slug },
-}) => {
+export default async function ProductMakePage({
+  params,
+}: Readonly<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  params: any;
+}>) {
+  const { slug } = params;
   const makeResponse = await fetch(`${API_BASE_URL}/product-make/slug/${slug}`);
 
   if (!makeResponse.ok) {
@@ -51,6 +53,4 @@ const ProductMakePage: NextPage<{ params: { slug: string } }> = async ({
       <DataTable columns={productModelTableColumns} data={models} />
     </div>
   );
-};
-
-export default ProductMakePage;
+}

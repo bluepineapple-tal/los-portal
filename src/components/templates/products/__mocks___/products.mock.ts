@@ -1,4 +1,4 @@
-import { ProductStatus } from "@/components/products/product-table";
+import { ProductStatus } from "@/components/products/product.interface";
 
 export const productsMock = [
   {
