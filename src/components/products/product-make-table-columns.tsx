@@ -13,11 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
+import { deleteProductMake } from "@/lib/functions/product-make.api";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "../ui/badge";
 import { DataTableColumnHeader } from "../ui/data-table-column-header";
-import { IProductMake, ProductStatus } from "./product.interface";
 import {
   Dialog,
   DialogClose,
@@ -28,8 +29,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { deleteProductMake } from "@/lib/functions/product-make.api";
-import { useToast } from "@/hooks/use-toast";
+import { IProductMake, ProductStatus } from "./product.interface";
 
 export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
   {
@@ -58,12 +58,15 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Make" />
     ),
     cell: ({ row }) => {
       const productMake = row.original;
       return (
-        <Link href={productMake.slug} className="hover:text-blue-500">
+        <Link
+          href={`/products/${productMake.slug}`}
+          className="hover:text-blue-500"
+        >
           {productMake.name}
         </Link>
       );
@@ -134,7 +137,7 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link href={`/products/${productMake.slug}`}>
-                  View product details
+                  View make details
                 </Link>
               </DropdownMenuItem>
 
@@ -143,12 +146,13 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
               <DialogTrigger asChild>
                 <DropdownMenuItem>
                   <Button variant={"destructive"} className="flex-1">
-                    Delete {productMake.name}
+                    Delete
                   </Button>
                 </DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
+
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Are you absolutely sure?</DialogTitle>
