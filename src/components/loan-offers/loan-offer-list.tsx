@@ -51,5 +51,11 @@ export function LoanOfferList({
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!offers.length) return <p>No loan offers found for this product.</p>;
 
-  return <DataTable columns={loanOfferTableColumns} data={offers} />;
+  return (
+    <DataTable
+      columns={loanOfferTableColumns}
+      data={offers}
+      filterColumnId="offer_name"
+    />
+  );
 }

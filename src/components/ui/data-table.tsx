@@ -30,11 +30,13 @@ import { DataTableViewOptions } from "./data-table-view-options";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterColumnId?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterColumnId,
 }: Readonly<DataTableProps<TData, TValue>>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -60,17 +62,27 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const effectiveFilterId =
+    filterColumnId ?? columns[1]?.id?.toString() ?? null;
+
+  const filterInput =
+    effectiveFilterId && table.getColumn(effectiveFilterId) ? (
+      <Input
+        placeholder={`Filter ${effectiveFilterId}...`}
+        value={
+          (table.getColumn(effectiveFilterId)?.getFilterValue() as string) ?? ""
+        }
+        onChange={(event) =>
+          table.getColumn(effectiveFilterId)?.setFilterValue(event.target.value)
+        }
+        className="max-w-sm"
+      />
+    ) : null;
+
   return (
     <div>
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {filterInput}
         <DataTableViewOptions table={table} />
       </div>
       <div className="rounded-md border mb-4">
