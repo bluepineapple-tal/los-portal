@@ -64,7 +64,11 @@ export const ProductPageTemplate = () => {
       {loadingMakes ? (
         <p>Loading makes...</p>
       ) : (
-        <DataTable columns={productMakeTableColumns} data={makes} />
+        <DataTable
+          columns={productMakeTableColumns}
+          data={makes}
+          filterColumnId="make"
+        />
       )}
     </div>
   );

@@ -56,7 +56,7 @@ export const productModelTableColumns: ColumnDef<IProductModel>[] = [
   },
 
   {
-    accessorKey: "name",
+    accessorKey: "model",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Model" />
     ),

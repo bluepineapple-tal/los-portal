@@ -63,7 +63,8 @@ export const loanOfferTableColumns: ColumnDef<ILoanOffer>[] = [
     accessorKey: "interest_rate",
     header: "Interest Rate (%)",
     cell: ({ row }) => {
-      const rate = row.getValue<number>("interest_rate");
+      const rate = Number(row.getValue<number>("interest_rate"));
+      console.log("rate: ", typeof rate);
       return `${rate.toFixed(2)}%`;
     },
   },
@@ -77,7 +78,7 @@ export const loanOfferTableColumns: ColumnDef<ILoanOffer>[] = [
     accessorKey: "processing_fee",
     header: "Processing Fee",
     cell: ({ row }) => {
-      const fee = row.getValue<number>("processing_fee");
+      const fee = Number(row.getValue<number>("processing_fee"));
       return `₹${fee.toFixed(2)}`;
     },
   },

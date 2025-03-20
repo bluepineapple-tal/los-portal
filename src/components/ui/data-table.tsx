@@ -65,19 +65,21 @@ export function DataTable<TData, TValue>({
   const effectiveFilterId =
     filterColumnId ?? columns[1]?.id?.toString() ?? null;
 
-  const filterInput =
-    effectiveFilterId && table.getColumn(effectiveFilterId) ? (
-      <Input
-        placeholder={`Filter ${effectiveFilterId}...`}
-        value={
-          (table.getColumn(effectiveFilterId)?.getFilterValue() as string) ?? ""
-        }
-        onChange={(event) =>
-          table.getColumn(effectiveFilterId)?.setFilterValue(event.target.value)
-        }
-        className="max-w-sm"
-      />
-    ) : null;
+  const effectiveFilterColumn =
+    effectiveFilterId && table.getColumn(effectiveFilterId);
+
+  const filterInput = effectiveFilterColumn ? (
+    <Input
+      placeholder={`Filter ${effectiveFilterColumn.columnDef.header}...`}
+      value={
+        (table.getColumn(effectiveFilterId)?.getFilterValue() as string) ?? ""
+      }
+      onChange={(event) =>
+        table.getColumn(effectiveFilterId)?.setFilterValue(event.target.value)
+      }
+      className="max-w-sm"
+    />
+  ) : null;
 
   return (
     <div>

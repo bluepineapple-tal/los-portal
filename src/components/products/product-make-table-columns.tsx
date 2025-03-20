@@ -56,7 +56,7 @@ export const productMakeTableColumns: ColumnDef<IProductMake>[] = [
   },
 
   {
-    accessorKey: "name",
+    accessorKey: "make",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Make" />
     ),

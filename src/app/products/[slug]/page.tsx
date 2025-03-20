@@ -50,7 +50,11 @@ export default async function ProductMakePage({
         </CardHeader>
       </Card>
 
-      <DataTable columns={productModelTableColumns} data={models} />
+      <DataTable
+        columns={productModelTableColumns}
+        data={models}
+        filterColumnId="model"
+      />
     </div>
   );
 }
