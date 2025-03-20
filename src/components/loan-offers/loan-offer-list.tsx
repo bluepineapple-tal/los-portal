@@ -26,7 +26,7 @@ export function LoanOfferList({
         setError(null);
 
         const response = await fetch(
-          `${API_BASE_URL}/loan-offers/product-model?modelId=${modelId}`,
+          `${API_BASE_URL}/loan-offers/product-model/${modelId}`,
         );
 
         if (!response.ok) {

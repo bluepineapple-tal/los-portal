@@ -7,6 +7,25 @@ import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
 
 /**
+ * Fetches loan offers using the provided data.
+ *
+ * @param data The fetch loan offers payload
+ * @returns The list of loan offers (as returned by the server)
+ */
+export async function getLoanOffersByModelId(data: {
+  productModelId: string;
+}): Promise<ILoanOffer[]> {
+  return fetchApi<ILoanOffer[]>(
+    `${API_BASE_URL}/loan-offers/${data.productModelId}`,
+    {
+      method: "GET",
+      // @ts-expect-error body init type
+      body: data,
+    },
+  );
+}
+
+/**
  * Creates a new loan offer using the provided data.
  *
  * @param data The new loan offer payload
