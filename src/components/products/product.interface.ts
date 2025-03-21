@@ -23,7 +23,7 @@ export interface ICreateProductMake {
 
 export interface IProductModel {
   id: string;
-  productMake?: IProductMake;
+  make?: IProductMake;
   name: string;
   slug: string;
   description: string;
