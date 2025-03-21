@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
 
   const filterInput = effectiveFilterColumn ? (
     <Input
-      placeholder={`Filter ${effectiveFilterColumn.columnDef.header}...`}
+      placeholder={`Filter ${effectiveFilterId}...`}
       value={
         (table.getColumn(effectiveFilterId)?.getFilterValue() as string) ?? ""
       }
