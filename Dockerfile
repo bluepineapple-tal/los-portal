@@ -10,6 +10,19 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Accept build args
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_APP_NAME
+ARG NEXT_PUBLIC_API_DOMAIN
+ARG NEXT_PUBLIC_WEBSITE_DOMAIN
+
+# Export them into the environment so Next.js picks them up at build time
+ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+ENV NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+ENV NEXT_PUBLIC_API_DOMAIN=${NEXT_PUBLIC_API_DOMAIN}
+ENV NEXT_PUBLIC_WEBSITE_DOMAIN=${NEXT_PUBLIC_WEBSITE_DOMAIN}
+
+
 # Copy the rest of the project files
 COPY . .
 
