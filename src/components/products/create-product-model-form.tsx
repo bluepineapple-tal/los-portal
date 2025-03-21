@@ -56,7 +56,7 @@ export function CreateProductModelForm() {
       name: "",
       description: "",
       price: 0,
-      status: ProductStatus.ACTIVE,
+      status: ProductStatus.INACTIVE,
     },
   });
 

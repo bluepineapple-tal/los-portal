@@ -111,7 +111,7 @@ export function CreateProductMakeForm() {
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={ProductStatus.ACTIVE}
+                  defaultValue={ProductStatus.INACTIVE}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select product status" />
