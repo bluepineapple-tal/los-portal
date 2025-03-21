@@ -46,3 +46,8 @@ jobs:
           push: true
           tags: |
             ghcr.io/bluepineapple-tal/los-portal:${{ steps.getTag.outputs.tag }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=https://los-api-staging.middle-earth.in
+            NEXT_PUBLIC_APP_NAME=LOS
+            NEXT_PUBLIC_API_DOMAIN=https://los-api-staging.middle-earth.in
+            NEXT_PUBLIC_WEBSITE_DOMAIN=https://los-lender-staging.middle-earth.in
