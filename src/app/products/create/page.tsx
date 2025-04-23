@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <div className="space-y-6">
-      <div className="max-w-screen-md mx-auto flex gap-4">
+      <div className="max-w-(--breakpoint-md) mx-auto flex gap-4">
         {/* Form Triggers */}
         <Card
           className={cn(
@@ -48,7 +48,7 @@ export default function Page() {
       </div>
       {/* Forms */}
       {showProduct === "make" && (
-        <Card className="max-w-screen-md mx-auto">
+        <Card className="max-w-(--breakpoint-md) mx-auto">
           <CardHeader>
             <CardTitle>Add new Product Make details</CardTitle>
             <CardDescription>
@@ -61,7 +61,7 @@ export default function Page() {
         </Card>
       )}
       {showProduct === "model" && (
-        <Card className="max-w-screen-md mx-auto">
+        <Card className="max-w-(--breakpoint-md) mx-auto">
           <CardHeader>
             <CardTitle>Add new Product Model details</CardTitle>
             <CardDescription>

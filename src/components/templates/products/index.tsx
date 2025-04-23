@@ -49,7 +49,7 @@ export const ProductPageTemplate = () => {
   console.log(`Client side component got userId: ${session.userId}`);
   return (
     <div>
-      <Card className="max-w-screen-xl w-full mx-auto flex justify-center items-center bg-primary text-primary-foreground text-center">
+      <Card className="max-w-(--breakpoint-xl) w-full mx-auto flex justify-center items-center bg-primary text-primary-foreground text-center">
         <CardHeader>
           <CardTitle>
             <h1>Product Makes</h1>

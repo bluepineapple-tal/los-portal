@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export default function CreateLoanOffer() {
   return (
     <div className="space-y-6">
-      <div className="max-w-screen-md mx-auto flex gap-4">
+      <div className="max-w-(--breakpoint-md) mx-auto flex gap-4">
         <Card
           className={cn(
             "w-full h-32 flex justify-center items-center transition-all bg-primary text-primary-foreground",
@@ -27,7 +27,7 @@ export default function CreateLoanOffer() {
       </div>
 
       {/* Loan Form */}
-      <Card className="max-w-screen-md mx-auto">
+      <Card className="max-w-(--breakpoint-md) mx-auto">
         <CardHeader>
           <CardTitle>Add Loan Details</CardTitle>
           <CardDescription>

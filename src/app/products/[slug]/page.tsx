@@ -41,7 +41,7 @@ export default async function ProductMakePage({
 
   return (
     <div>
-      <Card className="max-w-screen-xl w-full mx-auto flex justify-center items-center bg-primary text-primary-foreground text-center">
+      <Card className="max-w-(--breakpoint-xl) w-full mx-auto flex justify-center items-center bg-primary text-primary-foreground text-center">
         <CardHeader>
           <CardTitle>
             <h1>{make.name}</h1>

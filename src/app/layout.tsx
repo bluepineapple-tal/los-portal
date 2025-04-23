@@ -39,7 +39,7 @@ export default function RootLayout({
           <ThemeProvider>
             <NextTopLoader />
             <NavbarSection />
-            <main className="w-full max-w-screen-xl mx-auto p-5">
+            <main className="w-full max-w-(--breakpoint-xl) mx-auto p-5">
               {children}
             </main>
             <FooterSection />
