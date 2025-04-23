@@ -16,11 +16,11 @@ export interface ILoanOffer {
 }
 
 export interface ICreateLoanOffer {
-  productMakeId: string;
-  productModelId: string;
   offer_name: string;
   interest_rate: number;
   tenure_months: number;
+  min_amount: number;
+  max_amount: number;
   processing_fee: number;
   offer_details?: string;
   is_active: boolean;
