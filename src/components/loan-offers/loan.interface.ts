@@ -21,6 +21,8 @@ export interface ICreateLoanOffer {
   tenure_months: number;
   min_amount: number;
   max_amount: number;
+  valid_from: Date;
+  valid_to: Date;
   processing_fee: number;
   offer_details?: string;
   is_active: boolean;

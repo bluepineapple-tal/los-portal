@@ -34,7 +34,6 @@ export async function getLoanOffersByModelId(data: {
 export async function createLoanOffer(
   data: ICreateLoanOffer,
 ): Promise<ILoanOffer> {
-  console.log(data);
   return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers`, {
     method: "POST",
     // @ts-expect-error body init type
