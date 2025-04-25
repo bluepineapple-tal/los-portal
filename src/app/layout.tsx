@@ -6,8 +6,6 @@ import NextTopLoader from "nextjs-toploader";
 
 import { SuperTokensProvider } from "@/components/contexts/supertokensProvider";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
-import FooterSection from "@/components/sections/footer/default";
-import NavbarSection from "@/components/sections/navbar/default";
 import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
@@ -38,11 +36,7 @@ export default function RootLayout({
         <SuperTokensProvider>
           <ThemeProvider>
             <NextTopLoader />
-            <NavbarSection />
-            <main className="w-full max-w-(--breakpoint-xl) mx-auto p-5">
-              {children}
-            </main>
-            <FooterSection />
+            {children}
             <Toaster />
           </ThemeProvider>
         </SuperTokensProvider>
