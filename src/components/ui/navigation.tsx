@@ -32,6 +32,23 @@ const productComponents: {
   },
 ];
 
+const productCategoryComponents: {
+  title: string;
+  href: string;
+  description: string;
+}[] = [
+  {
+    title: "View All Product Categories",
+    href: "/product-categories/",
+    description: "Browse the complete list of available product categories.",
+  },
+  {
+    title: "Add a New Product Category",
+    href: "/product-categories/create",
+    description: "Create and add a new product category to the system.",
+  },
+];
+
 const loanOfferComponents: {
   title: string;
   href: string;
@@ -58,6 +75,23 @@ export default function Navigation() {
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               {productComponents.map((component) => (
+                <ListItem
+                  key={component.title}
+                  title={component.title}
+                  href={component.href}
+                >
+                  {component.description}
+                </ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Product Categories</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              {productCategoryComponents.map((component) => (
                 <ListItem
                   key={component.title}
                   title={component.title}
