@@ -3,8 +3,6 @@ import { z } from "zod";
 import { ProductCategoryStatus } from "@/components/product-categories/product-category.interface";
 
 export const createProductCategorySchema = z.object({
-  id: z.string().uuid({ message: "Please select a category" }),
-
   name: z
     .string()
     .min(1, { message: "Category name cannot be empty" })
