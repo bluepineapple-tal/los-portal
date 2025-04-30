@@ -71,7 +71,7 @@ export function CreateProductModelForm() {
         description: newModel.name,
       });
     } catch (error) {
-      console.log("error: ", error);
+      console.error("error: ", error);
       toast({
         variant: "destructive",
         title: "Uh oh! Error creating product model.",

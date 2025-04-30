@@ -61,7 +61,7 @@ export function CreateLoanOfferForm() {
         description: newLoanOffer.offer_name,
       });
     } catch (error) {
-      console.log("error: ", error);
+      console.error("error: ", error);
       toast({
         variant: "destructive",
         title: "Uh oh! Error creating Loan Offer.",

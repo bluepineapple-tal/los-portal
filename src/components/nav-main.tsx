@@ -20,7 +20,6 @@ export function NavMain({
     icon?: LucideIcon;
   }[];
 }>) {
-  console.log("items: ", items);
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
