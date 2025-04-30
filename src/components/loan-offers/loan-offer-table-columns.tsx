@@ -64,7 +64,6 @@ export const loanOfferTableColumns: ColumnDef<ILoanOffer>[] = [
     header: "Interest Rate (%)",
     cell: ({ row }) => {
       const rate = Number(row.getValue<number>("interest_rate"));
-      console.log("rate: ", typeof rate);
       return `${rate.toFixed(2)}%`;
     },
   },
