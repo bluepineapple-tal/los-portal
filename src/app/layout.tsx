@@ -39,6 +39,7 @@ export default function RootLayout({
         <SuperTokensProvider>
           <ThemeProvider>
             <NextTopLoader />
+
             <SidebarProvider>
               <AppSidebar variant="inset" />
               <SidebarInset>
@@ -46,6 +47,7 @@ export default function RootLayout({
                 <div className="flex flex-1 flex-col">{children}</div>
               </SidebarInset>
             </SidebarProvider>
+
             <Toaster />
           </ThemeProvider>
         </SuperTokensProvider>
