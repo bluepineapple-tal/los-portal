@@ -55,13 +55,13 @@ export const ProductCategoryPageTemplate = () => {
   if (session.doesSessionExist === false) {
     return <div>Session does not exist</div>;
   }
-  console.log(`Client side component got userId: ${session.userId}`);
+
   return (
     <div>
       <Card className="max-w-screen-xl w-full mx-auto flex justify-center items-center bg-primary text-primary-foreground text-center">
         <CardHeader>
           <CardTitle>
-            <h1>Product ProductCategories</h1>
+            <h1>Product Categories</h1>
           </CardTitle>
         </CardHeader>
       </Card>
@@ -76,7 +76,7 @@ export const ProductCategoryPageTemplate = () => {
         <DataTable
           columns={productCategoryTableColumns}
           data={productCategories}
-          filterColumnId="name"
+          filterColumnId="description"
         />
       )}
     </div>
