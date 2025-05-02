@@ -26,6 +26,8 @@ export default function NavbarSection() {
 
   if (!session.loading) {
     userId = session.userId;
+    // TODO: Remove this comment
+    // eslint-disable-next-line no-console
     console.log("userId: ", userId);
   }
 
@@ -36,7 +38,6 @@ export default function NavbarSection() {
       "doesSessionExist" in session &&
       !session.doesSessionExist
     ) {
-      console.log("[+] Redirecting to auth");
       router.push("/auth");
     }
   }, [session, router]);

@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { createLoanOfferSchema } from "@/app/loan-offers/create/createLoanOfferFormSchema";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -18,95 +20,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { API_BASE_URL } from "@/lib/constants";
 import { createLoanOffer } from "@/lib/functions/loan-offers.api";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { IProductMake, IProductModel } from "../products/product.interface";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function CreateLoanOfferForm() {
-  // State for all possible Makes (fetched from backend)
-  const [makes, setMakes] = useState<IProductMake[]>([]);
-  // State for all possible Models for the selected Make
-  const [models, setModels] = useState<IProductModel[]>([]);
-
   // Loading/error states for each fetch call
-  const [loadingMakes, setLoadingMakes] = useState(true);
-  console.log("loadingMakes: ", loadingMakes);
-  const [loadingModels, setLoadingModels] = useState(false);
-  console.log("loadingModels: ", loadingModels);
-
   const { toast } = useToast();
-
-  // 1) Fetch all Makes on component mount
-  useEffect(() => {
-    const fetchMakes = async () => {
-      try {
-        setLoadingMakes(true);
-        const response = await fetch(`${API_BASE_URL}/product-make`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch makes: ${response.statusText}`);
-        }
-        const data = (await response.json()) as IProductMake[];
-        setMakes(data);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: error instanceof Error ? error.message : "Error",
-        });
-      } finally {
-        setLoadingMakes(false);
-      }
-    };
-
-    fetchMakes();
-  }, [toast]);
-
-  // 2) When the user selects a Make, fetch the Models for that Make
-  const handleMakeChange = useCallback(
-    async (newMakeId: string) => {
-      setModels([]); // clear old models
-
-      if (!newMakeId) return;
-
-      try {
-        setLoadingModels(true);
-        const response = await fetch(
-          `${API_BASE_URL}/product-model/make/${newMakeId}`,
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to fetch models: ${response.statusText}`);
-        }
-        const data = (await response.json()) as IProductModel[];
-        setModels(data);
-      } catch (error) {
-        toast({
-          style: { backgroundColor: "red" },
-          title: error instanceof Error ? error.message : "Error",
-        });
-      } finally {
-        setLoadingModels(false);
-      }
-    },
-    [toast],
-  );
 
   // Define the form
   const form = useForm<z.infer<typeof createLoanOfferSchema>>({
     resolver: zodResolver(createLoanOfferSchema),
     defaultValues: {
-      productMakeId: "",
-      productModelId: "",
       offer_name: "",
       interest_rate: 0,
       tenure_months: 12,
+      valid_from: new Date(),
+      valid_to: new Date(),
+      min_amount: 10000,
+      max_amount: 50000,
       processing_fee: 0,
       offer_details: "",
       is_active: false,
@@ -124,7 +61,7 @@ export function CreateLoanOfferForm() {
         description: newLoanOffer.offer_name,
       });
     } catch (error) {
-      console.log("error: ", error);
+      console.error("error: ", error);
       toast({
         variant: "destructive",
         title: "Uh oh! Error creating Loan Offer.",
@@ -136,80 +73,13 @@ export function CreateLoanOfferForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Product Make Dropdown */}
-        <FormField
-          control={form.control}
-          name="productMakeId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Select Make</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={(value) => {
-                    if (value !== field.value) {
-                      handleMakeChange(value);
-                      field.onChange(value);
-                    }
-                  }}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a product make" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {makes.map((make) => (
-                      <SelectItem key={make.id} value={make.id}>
-                        {make.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormDescription>Select the product make.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Product Model Dropdown */}
-        <FormField
-          control={form.control}
-          name="productModelId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Select Model</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a product model" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {models.map((model) => (
-                      <SelectItem key={model.id} value={model.id}>
-                        {model.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormDescription>
-                Select the product model for this model.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         {/* OFFER NAME */}
         <FormField
           control={form.control}
           name="offer_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Offer Name</FormLabel>
+              <FormLabel>Offer Name *</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., Special New Year Offer" {...field} />
               </FormControl>
@@ -225,7 +95,7 @@ export function CreateLoanOfferForm() {
           name="interest_rate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Interest Rate (%)</FormLabel>
+              <FormLabel>Interest Rate (%) *</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -270,6 +140,154 @@ export function CreateLoanOfferForm() {
             </FormItem>
           )}
         />
+        <div className="flex gap-4">
+          {/* MINIMUM LOAN AMOUNT */}
+          <FormField
+            control={form.control}
+            name="min_amount"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Minimum Loan Amount *</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g., 10000"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormDescription>
+                  Minimum amount on which this loan offer is applicable
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* MAXIMUM LOAN AMOUNT */}
+          <FormField
+            control={form.control}
+            name="max_amount"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Maximum Loan Amount *</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g., 50000"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormDescription>
+                  Maximum amount on which this loan offer is applicable
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex gap-4">
+          {/* VALID FROM DATE */}
+          <FormField
+            control={form.control}
+            name="valid_from"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full">
+                <FormLabel>Offer Valid From *</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date() || date > new Date("2100-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Offer will be valid from this date
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* VALID TO DATE */}
+          <FormField
+            control={form.control}
+            name="valid_to"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full">
+                <FormLabel>Offer Valid Till *</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        // FIXME: Change disable date loging to make it in the future of valid from date. Remove the error from form schema
+                        date < new Date() || date > new Date("2100-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Offer will expire on this date
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* PROCESSING FEE */}
         <FormField
@@ -277,7 +295,7 @@ export function CreateLoanOfferForm() {
           name="processing_fee"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Processing Fee</FormLabel>
+              <FormLabel>Processing Fee *</FormLabel>
               <FormControl>
                 <Input
                   type="number"

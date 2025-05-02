@@ -6,9 +6,10 @@ import NextTopLoader from "nextjs-toploader";
 
 import { SuperTokensProvider } from "@/components/contexts/supertokensProvider";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
-import FooterSection from "@/components/sections/footer/default";
-import NavbarSection from "@/components/sections/navbar/default";
 import { Toaster } from "@/components/ui/toaster";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,11 +39,15 @@ export default function RootLayout({
         <SuperTokensProvider>
           <ThemeProvider>
             <NextTopLoader />
-            <NavbarSection />
-            <main className="w-full max-w-screen-xl mx-auto p-5">
-              {children}
-            </main>
-            <FooterSection />
+
+            <SidebarProvider>
+              <AppSidebar variant="inset" />
+              <SidebarInset>
+                <SiteHeader />
+                <div className="flex flex-1 flex-col">{children}</div>
+              </SidebarInset>
+            </SidebarProvider>
+
             <Toaster />
           </ThemeProvider>
         </SuperTokensProvider>
