@@ -15,7 +15,6 @@ import { fetchApi } from "../fetch-api";
 export async function createProductCategory(
   data: ICreateProductCategory,
 ): Promise<IProductCategory> {
-  console.log("Creating Product Category");
   return fetchApi<IProductCategory>(`${API_BASE_URL}/product-categories`, {
     method: "POST",
     // @ts-expect-error body init type

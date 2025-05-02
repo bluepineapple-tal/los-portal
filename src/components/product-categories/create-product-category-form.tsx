@@ -43,7 +43,7 @@ export function CreateProductCategoryForm() {
 
   async function onSubmit(values: z.infer<typeof createProductCategorySchema>) {
     // ✅ This will be type-safe and validated.
-    console.log("On Submit Button Clicked");
+
     try {
       const newCat = await createProductCategory(values);
       toast({
