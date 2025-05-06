@@ -7,13 +7,7 @@ import { API_BASE_URL } from "@/lib/constants";
 
 import { ILoanOffer, loanOfferTableColumns } from "./loan-offer-table-columns";
 
-export function LoanOfferList({
-  makeId,
-  modelId,
-}: Readonly<{
-  makeId: string;
-  modelId: string;
-}>) {
+export function LoanOfferList({}) {
   const [offers, setOffers] = useState<ILoanOffer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,9 +19,7 @@ export function LoanOfferList({
         setLoading(true);
         setError(null);
 
-        const response = await fetch(
-          `${API_BASE_URL}/loan-offers/product-model/${modelId}`,
-        );
+        const response = await fetch(`${API_BASE_URL}/loan-offers/`);
 
         if (!response.ok) {
           throw new Error(
@@ -45,7 +37,7 @@ export function LoanOfferList({
     };
 
     fetchOffers();
-  }, [makeId, modelId]);
+  }, []);
 
   if (loading) return <p>Loading Loan Offers...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
