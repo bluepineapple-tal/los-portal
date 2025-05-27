@@ -10,7 +10,7 @@ export default function Auth() {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     if (SuperTokens.canHandleRoute([EmailPasswordPreBuiltUI]) === false) {
-      redirectToAuth({ redirectBack: false });
+      redirectToAuth({ redirectBack: true });
     } else {
       setLoaded(true);
     }

@@ -4,12 +4,13 @@ import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
+import { AppSidebar } from "@/components/app-sidebar";
+import AuthProvider from "@/components/contexts/auth-provider";
 import { SuperTokensProvider } from "@/components/contexts/supertokensProvider";
 import { ThemeProvider } from "@/components/contexts/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
-import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +41,15 @@ export default function RootLayout({
           <ThemeProvider>
             <NextTopLoader />
 
-            <SidebarProvider>
-              <AppSidebar variant="inset" />
-              <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col">{children}</div>
-              </SidebarInset>
-            </SidebarProvider>
+            <AuthProvider>
+              <SidebarProvider>
+                <AppSidebar variant="inset" />
+                <SidebarInset>
+                  <SiteHeader />
+                  <div className="flex flex-1 flex-col">{children}</div>
+                </SidebarInset>
+              </SidebarProvider>
+            </AuthProvider>
 
             <Toaster />
           </ThemeProvider>
