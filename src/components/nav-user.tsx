@@ -7,6 +7,8 @@ import {
   MoreVerticalIcon,
   UserCircleIcon,
 } from "lucide-react";
+import { redirectToAuth } from "supertokens-auth-react";
+import { signOut } from "supertokens-auth-react/recipe/session";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,14 +29,23 @@ import {
 
 export function NavUser({
   user,
-}: {
+}: Readonly<{
   user: {
     name: string;
     email: string;
     avatar: string;
   };
-}) {
+}>) {
   const { isMobile } = useSidebar();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(); // invalidate tokens + cookies :contentReference[oaicite:0]{index=0}
+      redirectToAuth({ redirectBack: false }); // show the login screen
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -80,22 +91,22 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircleIcon />
+              <DropdownMenuItem className="gap-2">
+                <UserCircleIcon size={18} />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
+              <DropdownMenuItem className="gap-2">
+                <CreditCardIcon size={18} />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
+              <DropdownMenuItem className="gap-2">
+                <BellIcon size={18} />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon />
+            <DropdownMenuItem className="gap-2" onClick={handleLogout}>
+              <LogOutIcon size={18} />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
