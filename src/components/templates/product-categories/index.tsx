@@ -28,7 +28,7 @@ export const ProductCategoryPageTemplate = () => {
     const fetchProductCategories = async () => {
       try {
         setLoadingProductCategories(true);
-        const response = await fetch(`${API_BASE_URL}/product-category`);
+        const response = await fetch(`${API_BASE_URL}/product-categories`);
         if (!response.ok) {
           throw new Error(
             `Failed to fetch productCategories: ${response.statusText}`,

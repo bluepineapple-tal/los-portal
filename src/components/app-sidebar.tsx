@@ -6,6 +6,7 @@ import {
   CameraIcon,
   ClipboardListIcon,
   DatabaseIcon,
+  FolderDown,
   FileCodeIcon,
   FileTextIcon,
   FilesIcon,
@@ -15,6 +16,7 @@ import {
   SearchIcon,
   SettingsIcon,
   UsersIcon,
+  PlusCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -56,6 +58,26 @@ const data = {
       url: URLS.LOAN_APPLICATIONS,
       icon: FilesIcon,
     },
+
+    {
+      title: "Product Categories",
+      url: "#",
+      isActive: true,
+      icon: FolderDown,
+      items: [
+        {
+          title: "Create a New Category",
+          url: URLS.CREATE_PRODUCT_CATEGORIES,
+          icon: PlusCircleIcon,
+        },
+        {
+          title: "View all Categories",
+          url: URLS.PRODUCT_CATEGORIES,
+          icon: ListIcon,
+        },
+      ],
+    },
+
     {
       title: "Analytics",
       url: URLS.ANALYTICS,
