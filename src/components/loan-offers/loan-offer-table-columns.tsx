@@ -4,7 +4,6 @@ import { MoreHorizontal } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,111 +14,110 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 
-export interface ILoanOffer {
-  id: string;
-  productId: string;
-  offer_name: string;
-  interest_rate: number;
-  tenure_months: number;
-  processing_fee: number;
-  offer_details?: string;
-  is_active: boolean;
-  created_at: Date | string;
-  updated_at: Date | string;
-}
+import { SheetHeader, SheetTitle } from "../ui/sheet";
+import { ILoanOffer } from "./loan-offer.schema";
 
+/**
+ *    Select & drag-handle columns are automatically supplied
+ *     by <DataTable>, so we define only *business* columns here.
+ */
 export const loanOfferTableColumns: ColumnDef<ILoanOffer>[] = [
-  // 1) Checkbox for row selection
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  // 2) Offer Name
   {
     accessorKey: "offer_name",
     header: "Offer Name",
-    cell: ({ row }) => row.getValue("offer_name"),
+    meta: {
+      detailTrigger: true,
+      detailRenderer: (offer: ILoanOffer) => (
+        <>
+          <SheetHeader>
+            <SheetTitle>{offer.offer_name}</SheetTitle>
+          </SheetHeader>
+          <div className="grid gap-2 text-sm">
+            <p>
+              <strong>Interest&nbsp;Rate:</strong>{" "}
+              {parseFloat(offer.interest_rate).toFixed(2)}%
+            </p>
+            <p>
+              <strong>Tenure:</strong> {offer.tenure_months} months
+            </p>
+            <p>
+              <strong>Processing Fee:</strong> ₹{offer.processing_fee}
+            </p>
+            {offer.offer_details && <p>{offer.offer_details}</p>}
+          </div>
+        </>
+      ),
+    },
+    cell: ({ row }) => row.original.offer_name,
   },
-  // 3) Interest Rate
+
   {
     accessorKey: "interest_rate",
     header: "Interest Rate (%)",
-    cell: ({ row }) => {
-      const rate = Number(row.getValue<number>("interest_rate"));
-      return `${rate.toFixed(2)}%`;
-    },
+    cell: ({ row }) => `${Number(row.original.interest_rate).toFixed(2)}%`,
+    sortingFn: "basic",
   },
-  // 4) Tenure (Months)
+
   {
     accessorKey: "tenure_months",
     header: "Tenure (Months)",
+    sortingFn: "basic",
   },
-  // 5) Processing Fee
+
   {
     accessorKey: "processing_fee",
     header: "Processing Fee",
-    cell: ({ row }) => {
-      const fee = Number(row.getValue<number>("processing_fee"));
-      return `₹${fee.toFixed(2)}`;
-    },
+    cell: ({ row }) =>
+      `₹${Number(row.original.processing_fee).toLocaleString("en-IN", {
+        maximumFractionDigits: 2,
+      })}`,
+    sortingFn: "basic",
   },
-  // 6) Is Active (Badge)
+
   {
     accessorKey: "is_active",
     header: "Status",
     cell: ({ row }) => {
-      const isActive = row.getValue<boolean>("is_active");
+      const isActive = row.original.is_active;
       return (
         <Badge variant={isActive ? "success" : "destructive"}>
           {isActive ? "Active" : "Inactive"}
         </Badge>
       );
     },
+    sortingFn: "basic",
   },
-  // 7) Actions
+
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const offer = row.original;
+      // grab setter we passed via meta
+      // @ts-expect-error meta
+      const setEditing = table.options.meta?.setEditing;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(offer.id)}
             >
               Copy Offer ID
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {/* TODO: Link to a Loan Offer detail page */}
-              View details
+
+            <DropdownMenuItem onClick={() => setEditing?.(offer)}>
+              Edit / Update
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -5,7 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createLoanOfferSchema } from "@/app/loan-offers/create/createLoanOfferFormSchema";
+import { createLoanOfferSchema } from "@/components/loan-offers/create-loan-offer.schema";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {

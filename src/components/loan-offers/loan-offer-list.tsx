@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { API_BASE_URL } from "@/lib/constants";
 
-import { ILoanOffer, loanOfferTableColumns } from "./loan-offer-table-columns";
+import { loanOfferTableColumns } from "./loan-offer-table-columns";
+import { ILoanOffer } from "./loan-offer.schema";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
-export function LoanOfferList({}) {
+export function LoanOfferList() {
   const [offers, setOffers] = useState<ILoanOffer[]>([]);
+  const [editing, setEditing] = useState<ILoanOffer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,10 +47,33 @@ export function LoanOfferList({}) {
   if (!offers.length) return <p>No loan offers found for this product.</p>;
 
   return (
-    <DataTable
-      columns={loanOfferTableColumns}
-      data={offers}
-      filterColumnId="offer_name"
-    />
+    <>
+      <DataTable
+        columns={loanOfferTableColumns}
+        data={offers}
+        meta={{ setEditing }}
+        onReorder={(prev, next) => {
+          /* Persist new order to backend if needed */
+          return next;
+        }}
+      />
+
+      <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <SheetContent side="right" className="flex flex-col gap-6">
+          {editing && (
+            <>
+              <SheetHeader>
+                <SheetTitle>Edit “{editing.offer_name}”</SheetTitle>
+              </SheetHeader>
+
+              {/* TODO: Extract this into a react component and add actual edit component elements @nikhil-bluepineapple */}
+              <pre className="bg-muted rounded p-4 text-sm">
+                {JSON.stringify(editing, null, 2)}
+              </pre>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

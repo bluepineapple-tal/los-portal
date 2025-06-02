@@ -75,3 +75,6 @@ export const createLoanOfferSchema = z
     message: "Valid from date cannot be greater than valid to",
     path: ["min_amount"], // or use ["max_amount"] depending on where you want the error
   });
+
+/** Convenience TypeScript type */
+export type ICreateLoanOffer = z.infer<typeof createLoanOfferSchema>;
