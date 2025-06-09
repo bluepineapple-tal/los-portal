@@ -23,7 +23,7 @@ type NavItem = {
   items?: NavItem[];
 };
 
-export function NavMain({ items }: { items: NavItem[] }) {
+export function NavMain({ items }: Readonly<{ items: NavItem[] }>) {
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const toggleItem = (title: string) => {

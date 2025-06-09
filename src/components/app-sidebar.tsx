@@ -1,25 +1,9 @@
 "use client";
 
-import {
-  ArrowUpCircleIcon,
-  BarChartIcon,
-  CameraIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
-  FolderDown,
-  FileCodeIcon,
-  FileTextIcon,
-  FilesIcon,
-  HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
-  SearchIcon,
-  SettingsIcon,
-  UsersIcon,
-  PlusCircleIcon,
-} from "lucide-react";
+import { ArrowUpCircleIcon } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -34,141 +18,27 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { URLS } from "@/lib/constants";
-
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: URLS.DASHBOARD,
-      icon: LayoutDashboardIcon,
-    },
-    {
-      title: "Loan Offers",
-      url: URLS.LOAN_OFFERS,
-      icon: ListIcon,
-    },
-    {
-      title: "Loan Applications",
-      url: URLS.LOAN_APPLICATIONS,
-      icon: FilesIcon,
-    },
-
-    {
-      title: "Product Categories",
-      url: "#",
-      isActive: true,
-      icon: FolderDown,
-      items: [
-        {
-          title: "Create a New Category",
-          url: URLS.CREATE_PRODUCT_CATEGORIES,
-          icon: PlusCircleIcon,
-        },
-        {
-          title: "View all Categories",
-          url: URLS.PRODUCT_CATEGORIES,
-          icon: ListIcon,
-        },
-      ],
-    },
-
-    {
-      title: "Analytics",
-      url: URLS.ANALYTICS,
-      icon: BarChartIcon,
-    },
-    {
-      title: "Users",
-      url: URLS.USERS,
-      icon: UsersIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: FileCodeIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: SearchIcon,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: DatabaseIcon,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: ClipboardListIcon,
-    },
-  ],
-};
+import { filterNavByRole } from "@/lib/filter-nav";
+import { NAV_DOCS, NAV_MAIN, NAV_SECONDARY } from "@/lib/navigation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const session = useSessionContext();
+
+  if (session.loading) return null; // or a skeleton
+  if (!session.doesSessionExist) return null; // shouldn't happen (SessionAuth wrapper)
+
+  const accessTokenPayload = session.accessTokenPayload;
+  const roles: string[] = accessTokenPayload.roles ?? [];
+  const user = {
+    name: accessTokenPayload.name ?? "User",
+    email: accessTokenPayload.email ?? "",
+    avatar: accessTokenPayload.avatar ?? "/avatars/default.png",
+  };
+
+  const navMain = filterNavByRole(NAV_MAIN, roles);
+  const navDocs = filterNavByRole(NAV_DOCS, roles);
+  const navSecondary = filterNavByRole(NAV_SECONDARY, roles);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -188,13 +58,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavDocuments items={navDocs} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

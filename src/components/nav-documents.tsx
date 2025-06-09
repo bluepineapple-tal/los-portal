@@ -27,7 +27,7 @@ export function NavDocuments({
   items,
 }: Readonly<{
   items: {
-    name: string;
+    title: string;
     url: string;
     icon: LucideIcon;
   }[];
@@ -39,11 +39,11 @@ export function NavDocuments({
       <SidebarGroupLabel>Documents</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
                 <item.icon />
-                <span>{item.name}</span>
+                <span>{item.title}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
