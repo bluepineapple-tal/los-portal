@@ -2,6 +2,7 @@ import {
   BarChartIcon,
   ClipboardListIcon,
   DatabaseIcon,
+  FilePenIcon,
   FilesIcon,
   FolderDown,
   HelpCircleIcon,
@@ -37,6 +38,12 @@ export const NAV_MAIN: NavItem[] = [
     url: URLS.LOAN_APPLICATIONS,
     icon: FilesIcon,
     roles: ["super-admin", "admin", "support", "consumer"],
+  },
+  {
+    title: "Create Loan Application",
+    url: URLS.CREATE_LOAN_APPLICATION,
+    icon: FilePenIcon,
+    roles: ["consumer"],
   },
   {
     title: "Product Categories",
