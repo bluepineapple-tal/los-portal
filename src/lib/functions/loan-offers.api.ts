@@ -1,10 +1,7 @@
-import {
-  ICreateLoanOffer,
-  ILoanOffer,
-} from "@/components/loan-offers/loan.interface";
-
+import { ILoanOffer } from "@/components/loan-offers/loan-offer.schema";
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
+import { ICreateLoanOffer } from "@/components/loan-offers/create-loan-offer.schema";
 
 /**
  * Fetches loan offers using the provided data.
@@ -36,7 +33,7 @@ export async function createLoanOffer(
 ): Promise<ILoanOffer> {
   return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers`, {
     method: "POST",
-    // @ts-expect-error body init type
+    // @ts-expect-error body init
     body: data,
   });
 }
@@ -54,7 +51,7 @@ export async function updateLoanOffer(
 ): Promise<ILoanOffer> {
   return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers/${id}`, {
     method: "PUT",
-    // @ts-expect-error body init type
+    // @ts-expect-error body init
     body: data,
   });
 }
