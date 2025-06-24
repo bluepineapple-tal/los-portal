@@ -28,7 +28,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   if (!session.doesSessionExist) return null; // shouldn't happen (SessionAuth wrapper)
 
   const accessTokenPayload = session.accessTokenPayload;
-  const roles: string[] = accessTokenPayload.roles ?? [];
+  const roles: string[] = accessTokenPayload["st-role"].v ?? [];
   const user = {
     name: accessTokenPayload.name ?? "User",
     email: accessTokenPayload.email ?? "",

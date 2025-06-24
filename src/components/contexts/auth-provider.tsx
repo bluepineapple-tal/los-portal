@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import { FC, ReactNode } from "react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
+import { AccessDeniedScreen } from "supertokens-auth-react/recipe/session/prebuiltui";
 
 type Props = {
   children: ReactNode;
@@ -16,7 +17,9 @@ const AuthProvider: FC<Props> = ({ children }) => {
   return isAuthRoute ? (
     children
   ) : (
-    <SessionAuth requireAuth>{children}</SessionAuth>
+    <SessionAuth requireAuth accessDeniedScreen={AccessDeniedScreen}>
+      {children}
+    </SessionAuth>
   );
 };
 
