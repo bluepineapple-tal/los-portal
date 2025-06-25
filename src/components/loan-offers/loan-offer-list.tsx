@@ -8,12 +8,14 @@ import { API_BASE_URL } from "@/lib/constants";
 import { loanOfferTableColumns } from "./loan-offer-table-columns";
 import { ILoanOffer } from "./loan-offer.schema";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { EditLoanOfferForm } from "./edit-loan-offer-form";
 
 export function LoanOfferList() {
   const [offers, setOffers] = useState<ILoanOffer[]>([]);
   const [editing, setEditing] = useState<ILoanOffer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [version, setVersion] = useState(0);
 
   // Fetch loan offers for the selected Make and Model
   useEffect(() => {
@@ -49,6 +51,7 @@ export function LoanOfferList() {
   return (
     <>
       <DataTable
+        key={version}
         columns={loanOfferTableColumns}
         data={offers}
         meta={{ setEditing }}
@@ -66,10 +69,18 @@ export function LoanOfferList() {
                 <SheetTitle>Edit “{editing.offer_name}”</SheetTitle>
               </SheetHeader>
 
-              {/* TODO: Extract this into a react component and add actual edit component elements @nikhil-bluepineapple */}
-              <pre className="bg-muted rounded p-4 text-sm">
-                {JSON.stringify(editing, null, 2)}
-              </pre>
+              <EditLoanOfferForm
+                offer={editing}
+                onSuccess={(updated) => {
+                  // update row in local state -> instant optimistic UI
+                  setOffers((prev) =>
+                    prev.map((o) => (o.id === updated.id ? updated : o)),
+                  );
+                  setVersion((v) => v + 1);
+                  setEditing(null);
+                }}
+                onCancel={() => setEditing(null)}
+              />
             </>
           )}
         </SheetContent>

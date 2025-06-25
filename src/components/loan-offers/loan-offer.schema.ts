@@ -10,6 +10,8 @@ export const loanOfferSchema = z.object({
   processing_fee: z.string(),
   min_amount: z.string(),
   max_amount: z.string(),
+  valid_from: z.string(),
+  valid_to: z.string(),
 
   offer_details: z.string().optional(),
   is_active: z.coerce.boolean(),

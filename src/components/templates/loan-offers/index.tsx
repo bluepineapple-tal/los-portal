@@ -14,9 +14,6 @@ export const LoanOffersPageTemplate = () => {
     return <div>Session does not exist</div>;
   }
 
-  // TODO: Remove this comment
-  // eslint-disable-next-line no-console
-  console.log(`Client side component got userId: ${session.userId}`);
   return (
     <div className="p-6">
       <h1 className="mb-4 text-xl font-bold">Loan Offers</h1>
