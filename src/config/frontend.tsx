@@ -55,5 +55,6 @@ export const frontendConfig = (): SuperTokensConfig => {
         setHref: (url) => routerInfo.router!.push(url.toString()),
       },
     }),
+    enableDebugLogs: process.env.NODE_ENV === "development",
   };
 };

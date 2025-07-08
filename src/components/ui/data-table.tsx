@@ -116,7 +116,7 @@ declare module "@tanstack/react-table" {
 /*                         INTERNAL DRAG-HANDLE COMPONENT                     */
 /* -------------------------------------------------------------------------- */
 
-function DragHandle({ id }: { id: UniqueIdentifier }) {
+function DragHandle({ id }: Readonly<{ id: UniqueIdentifier }>) {
   const { attributes, listeners } = useSortable({ id });
   return (
     <Button
@@ -145,7 +145,7 @@ export function DataTable<TData extends object>({
   pageSizes = [10, 20, 30, 40, 50],
   initialVisibility = {},
   onReorder,
-}: DataTableProps<TData>) {
+}: Readonly<DataTableProps<TData>>) {
   /* ----------------------------- State & refs ----------------------------- */
 
   const [data, setData] = React.useState(initial);
@@ -267,10 +267,10 @@ export function DataTable<TData extends object>({
   function CellWithOptionalDetail<T>({
     cell,
     row,
-  }: {
+  }: Readonly<{
     cell: ReturnType<Row<T>["getVisibleCells"]>[number];
     row: Row<T>;
-  }) {
+  }>) {
     const meta = cell.column.columnDef.meta;
     const content = flexRender(cell.column.columnDef.cell, cell.getContext());
 
@@ -289,10 +289,10 @@ export function DataTable<TData extends object>({
   function DetailSheet({
     trigger,
     children,
-  }: {
+  }: Readonly<{
     trigger: React.ReactNode;
     children: React.ReactNode;
-  }) {
+  }>) {
     return (
       <Sheet>
         <SheetTrigger asChild>
@@ -310,7 +310,7 @@ export function DataTable<TData extends object>({
     );
   }
 
-  function DraggableRow<TData>({ row }: { row: Row<TData> }) {
+  function DraggableRow<TData>({ row }: Readonly<{ row: Row<TData> }>) {
     const { transform, transition, setNodeRef, isDragging } = useSortable({
       id: row.id,
     });

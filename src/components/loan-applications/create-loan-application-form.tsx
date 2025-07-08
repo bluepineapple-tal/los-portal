@@ -69,6 +69,9 @@ export function CreateLoanApplicationForm() {
   /* ------------------------- submit handler --------------------------- */
   const onSubmit = async (values: ICreateLoanApplication) => {
     try {
+      // Check if the user (consumer) exists in the DB
+      // If the user exists then get the id otherwise create the user entry and get the id
+      //
       await createLoanApplication(values);
       toast({
         style: { backgroundColor: "#4ade80" },
