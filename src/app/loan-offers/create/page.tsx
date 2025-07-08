@@ -34,6 +34,7 @@ export default function CreateLoanOffer() {
             Select a product and create a loan offer for this product
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <CreateLoanOfferForm />
         </CardContent>
