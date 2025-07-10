@@ -8,9 +8,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { ILoanOffer } from "./loan-offer.schema";
+import { LoanOfferDTO } from "./loan-offer.schema";
 
-export function LoanOfferSheet({ offer }: Readonly<{ offer: ILoanOffer }>) {
+export function LoanOfferSheet({ offer }: Readonly<{ offer: LoanOfferDTO }>) {
   return (
     <Sheet>
       <SheetTrigger asChild>

@@ -1,6 +1,6 @@
 import {
   ICreateProductCategory,
-  IProductCategory,
+  ProductCategoryDTO,
 } from "@/components/product-categories/product-category.interface";
 
 import { API_BASE_URL } from "../constants";
@@ -14,8 +14,8 @@ import { fetchApi } from "../fetch-api";
  */
 export async function createProductCategory(
   data: ICreateProductCategory,
-): Promise<IProductCategory> {
-  return fetchApi<IProductCategory>(`${API_BASE_URL}/product-categories`, {
+): Promise<ProductCategoryDTO> {
+  return fetchApi<ProductCategoryDTO>(`${API_BASE_URL}/product-categories`, {
     method: "POST",
     // @ts-expect-error body init type
     body: data,
@@ -32,12 +32,15 @@ export async function createProductCategory(
 export async function updateProductCategory(
   id: string,
   data: Partial<ICreateProductCategory>,
-): Promise<IProductCategory> {
-  return fetchApi<IProductCategory>(`${API_BASE_URL}/product-category/${id}`, {
-    method: "PUT",
-    // @ts-expect-error body init type
-    body: data,
-  });
+): Promise<ProductCategoryDTO> {
+  return fetchApi<ProductCategoryDTO>(
+    `${API_BASE_URL}/product-category/${id}`,
+    {
+      method: "PUT",
+      // @ts-expect-error body init type
+      body: data,
+    },
+  );
 }
 
 /**

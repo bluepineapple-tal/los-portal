@@ -26,4 +26,4 @@ export const productCategorySchema = z.object({
   updated_at: z.coerce.date(),
 });
 
-export type IProductCategory = z.infer<typeof productCategorySchema>;
+export type ProductCategoryDTO = z.infer<typeof productCategorySchema>;

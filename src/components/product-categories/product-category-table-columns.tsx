@@ -30,11 +30,11 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import {
-  IProductCategory,
+  ProductCategoryDTO,
   ProductCategoryStatus,
 } from "./product-category.interface";
 
-export const productCategoryTableColumns: ColumnDef<IProductCategory>[] = [
+export const productCategoryTableColumns: ColumnDef<ProductCategoryDTO>[] = [
   {
     id: "select",
     header: ({ table }) => (

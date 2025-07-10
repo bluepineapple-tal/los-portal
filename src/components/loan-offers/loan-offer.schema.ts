@@ -19,4 +19,4 @@ export const loanOfferSchema = z.object({
   updated_at: z.union([z.string(), z.date()]),
 });
 
-export type ILoanOffer = z.infer<typeof loanOfferSchema>;
+export type LoanOfferDTO = z.infer<typeof loanOfferSchema>;

@@ -5,11 +5,19 @@ import { productCategorySchema } from "../product-categories/product-category.sc
 
 /*  Enum helper—​keep the strings in sync with the NestJS `ApplicationStatus`  */
 export const applicationStatusEnum = z.enum([
-  "SUBMITTED",
-  "UNDER_REVIEW",
-  "APPROVED",
-  "REJECTED",
-  "DISBURSED",
+  "draft",
+  "submitted",
+  "under_review",
+  "approved",
+  "rejected",
+  "escalated",
+] as const);
+
+export const sourceOfIncomeEnum = z.enum([
+  "salaried",
+  "self_employed",
+  "business",
+  "other",
 ] as const);
 
 export const loanApplicationSchema = z.object({
@@ -24,13 +32,16 @@ export const loanApplicationSchema = z.object({
   manual_review_needed: z.boolean(),
 
   created_at: z.coerce.date(),
+
   updated_at: z.coerce.date(),
 
   loan_offer: loanOfferSchema.optional(),
 
   productCategory: productCategorySchema,
 
-  // TODO: Add consumer and underwriter data here
+  monthly_income: z.number(),
+
+  source_of_income: sourceOfIncomeEnum,
 });
 
 /* -------------------------------------------------------------------------- */

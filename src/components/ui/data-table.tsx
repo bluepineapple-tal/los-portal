@@ -46,7 +46,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-import { ILoanOffer } from "../loan-offers/loan-offer.schema";
+import { LoanOfferDTO } from "../loan-offers/loan-offer.schema";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import {
@@ -108,7 +108,7 @@ declare module "@tanstack/react-table" {
     /** What to render inside the Sheet / Drawer when opened         */
     detailRenderer?: RowDetailRenderer<TData>;
     /** Setter that opens the global edit drawer in LoanOfferList */
-    setEditing?: (offer: ILoanOffer) => void;
+    setEditing?: (offer: LoanOfferDTO) => void;
   }
 }
 

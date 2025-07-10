@@ -5,7 +5,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { userSchema } from "@/components/onboarding/user.schema";
+import { createUserSchema } from "@/components/onboarding/create-user.schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -39,8 +39,8 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
   const router = useRouter();
 
   /* ------------------------ RHF setup ----------------------------- */
-  const form = useForm<z.infer<typeof userSchema>>({
-    resolver: zodResolver(userSchema),
+  const form = useForm<z.infer<typeof createUserSchema>>({
+    resolver: zodResolver(createUserSchema),
     defaultValues: {
       supertokensUserId: userId,
       first_name: "",
@@ -56,11 +56,13 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
       city: "",
       state: "",
       pin_code: "",
+      aadhar_number: "",
+      pan_number: "",
     },
   });
 
   /* ------------------------ submit ------------------------------- */
-  const onSubmit = async (values: z.infer<typeof userSchema>) => {
+  const onSubmit = async (values: z.infer<typeof createUserSchema>) => {
     try {
       const newUSer = await createUser(values);
       toast({
@@ -319,6 +321,36 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>PIN Code *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="aadhar_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Aadhar Number *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="pan_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>PAN Number *</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>

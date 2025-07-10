@@ -1,4 +1,7 @@
-import { ICreateLoanApplication } from "@/components/loan-applications/create-loan-application.schema";
+import {
+  CreateLoanApplicationPayload,
+  ICreateLoanApplication,
+} from "@/components/loan-applications/create-loan-application.schema";
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
 import { ILoanApplication } from "@/components/loan-applications/loan-application.schema";
@@ -35,7 +38,7 @@ export async function getLoanApplication(
  * @returns The newly created `LoanApplication`.
  */
 export async function createLoanApplication(
-  data: ICreateLoanApplication,
+  data: CreateLoanApplicationPayload,
 ): Promise<ILoanApplication> {
   return fetchApi<ILoanApplication>(`${API_BASE_URL}/loan-applications`, {
     method: "POST",

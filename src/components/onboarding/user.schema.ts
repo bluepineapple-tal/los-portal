@@ -1,35 +1,69 @@
 import { z } from "zod";
 
-const PHONE_10_DIGIT = /^\d{10}$/;
-const PIN_6_DIGIT = /^\d{6}$/;
+/* reusable regex helpers -------------------------------------------------- */
+const UUID = z.string().uuid();
+const PHONE = z.string().regex(/^\d{10}$/, "Must be 10 digits exactly");
 
-export const userSchema = z.object({
-  supertokensUserId: z.string(),
-  /* identity ------------------------------------------------------- */
-  first_name: z
-    .string()
-    .min(2, "First name must contain at least 2 characters"),
-  last_name: z.string().min(2, "Last name must contain at least 2 characters"),
-  date_of_birth: z.date({
-    required_error: "Date of birth is required",
-  }),
-  gender: z.enum(["male", "female", "other"], {
-    errorMap: () => ({ message: "Gender is required" }),
-  }),
-  country: z.string().default("India"),
+/* enums ------------------------------------------------------------------- */
+export const roleEnum = z.enum([
+  "consumer",
+  "vendor",
+  "nbfc_personnel",
+  "underwriter",
+  "admin",
+]);
 
-  marital_status: z.enum(["single", "married", "divorced", "widowed"], {
-    errorMap: () => ({ message: "Marital status is required" }),
-  }),
-  /* contact -------------------------------------------------------- */
-  email: z.string().email("Invalid email address"),
-  phone: z.string().regex(PHONE_10_DIGIT, "Must be exactly 10 digits"),
-  /* address -------------------------------------------------------- */
-  street1: z.string().min(3, "Street address is required"),
-  street2: z.string().optional(),
-  city: z.string().min(2, "City is required"),
-  state: z.string().min(2, "State is required"),
-  pin_code: z.string().regex(PIN_6_DIGIT, "PIN code must be 6 numeric digits"),
+export const statusEnum = z.enum(["active", "inactive", "suspended"]);
+
+export const genderEnum = z.enum(["male", "female", "other"]);
+export const maritalEnum = z.enum(["single", "married", "divorced", "widowed"]);
+export const incomeEnum = z.enum([
+  "salaried",
+  "self_employed",
+  "business",
+  "other",
+]);
+
+/* consumer profile -------------------------------------------------------- */
+export const consumerProfileSchema = z.object({
+  id: UUID,
+  date_of_birth: z.string().datetime(), // ISO string from BE
+  gender: genderEnum,
+  marital_status: maritalEnum,
+  alt_phone: PHONE.nullable(),
+  street1: z.string(),
+  street2: z.string().nullable(),
+  city: z.string(),
+  state: z.string(),
+  pin_code: z.string().length(6),
+  country: z.string(),
+  monthly_income: z.number().nullable(),
+  source_of_income: incomeEnum.nullable(),
+  aadhar_number: z.string().nullable(),
+  pan_number: z.string().nullable(),
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
 });
 
-export type IUser = z.infer<typeof userSchema>;
+/* vendor profile – adjust fields as you add them -------------------------- */
+export const vendorProfileSchema = z.null(); // currently always null
+
+/* top-level user ---------------------------------------------------------- */
+export const userSchema = z.object({
+  id: UUID,
+  supertokensUserId: UUID,
+  email: z.string().email(),
+  first_name: z.string(),
+  last_name: z.string(),
+  phone: PHONE,
+  role: roleEnum,
+  status: statusEnum,
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
+  vendorProfile: vendorProfileSchema.nullable(),
+  consumerProfile: consumerProfileSchema.nullable(),
+});
+
+/* exported TypeScript helpers -------------------------------------------- */
+export type UserDTO = z.infer<typeof userSchema>;
+export type ConsumerProfileDTO = z.infer<typeof consumerProfileSchema>;

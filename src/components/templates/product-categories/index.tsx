@@ -5,7 +5,7 @@ import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 import AlertDestructive from "@/components/common/alerts/alert-destructive";
 import { productCategoryTableColumns as productCategoryTableColumns } from "@/components/product-categories/product-category-table-columns";
-import { IProductCategory as IProductCategory } from "@/components/product-categories/product-category.interface";
+import { ProductCategoryDTO as ProductCategoryDTO } from "@/components/product-categories/product-category.interface";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { API_BASE_URL } from "@/lib/constants";
@@ -14,7 +14,7 @@ export const ProductCategoryPageTemplate = () => {
   const session = useSessionContext();
 
   const [productCategories, setProductCategories] = useState<
-    IProductCategory[]
+    ProductCategoryDTO[]
   >([]);
 
   const [loadingProductCategories, setLoadingProductCategories] =
@@ -34,7 +34,7 @@ export const ProductCategoryPageTemplate = () => {
             `Failed to fetch productCategories: ${response.statusText}`,
           );
         }
-        const data = (await response.json()) as IProductCategory[];
+        const data = (await response.json()) as ProductCategoryDTO[];
         setProductCategories(data);
       } catch (error) {
         setErrorProductCategories(
