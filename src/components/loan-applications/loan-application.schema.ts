@@ -12,6 +12,7 @@ export const applicationStatusEnum = z.enum([
   "approved",
   "rejected",
   "escalated",
+  "claimed",
 ] as const);
 
 export const sourceOfIncomeEnum = z.enum([
@@ -21,11 +22,14 @@ export const sourceOfIncomeEnum = z.enum([
   "other",
 ] as const);
 
+export const kycStatusEnum = z.enum(["verified", "failed", "pending"] as const);
+export type KycStatus = z.infer<typeof kycStatusEnum>;
+
 export const loanApplicationSchema = z.object({
   id: z.string().uuid(),
   status: applicationStatusEnum,
   application_date: z.coerce.date(),
-  requested_amount: z.number().optional(),
+  requested_amount: z.number(),
   manual_review_needed: z.boolean(),
 
   /* audit */
@@ -33,7 +37,7 @@ export const loanApplicationSchema = z.object({
   updated_at: z.coerce.date(),
 
   /* relations */
-  selectedOffer: loanOfferSchema.optional(),
+  selectedOffer: loanOfferSchema,
   productCategory: productCategorySchema,
 
   /* consumer snapshot */
@@ -45,4 +49,4 @@ export const loanApplicationSchema = z.object({
 });
 
 /*  Convenience TS type                                                       */
-export type ILoanApplication = z.infer<typeof loanApplicationSchema>;
+export type LoanApplicationDTO = z.infer<typeof loanApplicationSchema>;

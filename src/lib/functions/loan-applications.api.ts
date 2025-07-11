@@ -4,15 +4,15 @@ import {
 } from "@/components/loan-applications/create-loan-application.schema";
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
-import { ILoanApplication } from "@/components/loan-applications/loan-application.schema";
+import { LoanApplicationDTO } from "@/components/loan-applications/loan-application.schema";
 
 /**
  * Fetch **all** loan applications from the server.
  *
  * @returns Array of `LoanApplication` objects.
  */
-export async function getLoanApplications(): Promise<ILoanApplication[]> {
-  return fetchApi<ILoanApplication[]>(`${API_BASE_URL}/loan-applications`, {
+export async function getLoanApplications(): Promise<LoanApplicationDTO[]> {
+  return fetchApi<LoanApplicationDTO[]>(`${API_BASE_URL}/loan-applications`, {
     method: "GET",
   });
 }
@@ -25,10 +25,13 @@ export async function getLoanApplications(): Promise<ILoanApplication[]> {
  */
 export async function getLoanApplication(
   id: string,
-): Promise<ILoanApplication> {
-  return fetchApi<ILoanApplication>(`${API_BASE_URL}/loan-applications/${id}`, {
-    method: "GET",
-  });
+): Promise<LoanApplicationDTO> {
+  return fetchApi<LoanApplicationDTO>(
+    `${API_BASE_URL}/loan-applications/${id}`,
+    {
+      method: "GET",
+    },
+  );
 }
 
 /**
@@ -39,8 +42,8 @@ export async function getLoanApplication(
  */
 export async function createLoanApplication(
   data: CreateLoanApplicationPayload,
-): Promise<ILoanApplication> {
-  return fetchApi<ILoanApplication>(`${API_BASE_URL}/loan-applications`, {
+): Promise<LoanApplicationDTO> {
+  return fetchApi<LoanApplicationDTO>(`${API_BASE_URL}/loan-applications`, {
     method: "POST",
     // @ts-expect-error body init type
     body: data,
@@ -57,12 +60,15 @@ export async function createLoanApplication(
 export async function updateLoanApplication(
   id: string,
   data: Partial<ICreateLoanApplication>,
-): Promise<ILoanApplication> {
-  return fetchApi<ILoanApplication>(`${API_BASE_URL}/loan-applications/${id}`, {
-    method: "PUT",
-    // @ts-expect-error body init type
-    body: data,
-  });
+): Promise<LoanApplicationDTO> {
+  return fetchApi<LoanApplicationDTO>(
+    `${API_BASE_URL}/loan-applications/${id}`,
+    {
+      method: "PUT",
+      // @ts-expect-error body init type
+      body: data,
+    },
+  );
 }
 
 /**
