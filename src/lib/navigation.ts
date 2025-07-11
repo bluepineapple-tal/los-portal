@@ -1,16 +1,16 @@
 import {
-  BarChartIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
+  // BarChartIcon,
+  // ClipboardListIcon,
+  // DatabaseIcon,
   FilePenIcon,
   FilesIcon,
   FolderDown,
-  HelpCircleIcon,
+  // HelpCircleIcon,
   LayoutDashboardIcon,
   ListIcon,
   LucideIcon,
   PlusCircleIcon,
-  SearchIcon,
+  // SearchIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -64,22 +64,22 @@ export const NAV_MAIN: NavItem[] = [
       },
     ],
   },
-  {
-    title: "Analytics",
-    url: URLS.ANALYTICS,
-    icon: BarChartIcon,
-    roles: ["admin"],
-  },
+  // {
+  //   title: "Analytics",
+  //   url: URLS.ANALYTICS,
+  //   icon: BarChartIcon,
+  //   roles: ["admin"],
+  // },
   { title: "Users", url: URLS.USERS, icon: UsersIcon, roles: ["super-admin"] },
 ];
 
 export const NAV_SECONDARY: NavItem[] = [
   { title: "Settings", url: "#", icon: SettingsIcon },
-  { title: "Get Help", url: "#", icon: HelpCircleIcon },
-  { title: "Search", url: "#", icon: SearchIcon },
+  // { title: "Get Help", url: "#", icon: HelpCircleIcon },
+  // { title: "Search", url: "#", icon: SearchIcon },
 ];
 
 export const NAV_DOCS: NavItem[] = [
-  { title: "Data Library", url: "#", icon: DatabaseIcon },
-  { title: "Reports", url: "#", icon: ClipboardListIcon },
+  // { title: "Data Library", url: "#", icon: DatabaseIcon },
+  // { title: "Reports", url: "#", icon: ClipboardListIcon },
 ];
