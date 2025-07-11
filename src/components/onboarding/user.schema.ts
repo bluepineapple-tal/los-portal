@@ -60,10 +60,21 @@ export const userSchema = z.object({
   status: statusEnum,
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
-  vendorProfile: vendorProfileSchema.nullable(),
-  consumerProfile: consumerProfileSchema.nullable(),
 });
 
+export const consumerProfileWithUserSchema = consumerProfileSchema.merge(
+  z.object({
+    user: userSchema,
+  }),
+);
+
+export const userWithPorfilesSchema = userSchema.merge(
+  z.object({
+    vendorProfile: vendorProfileSchema.nullable(),
+    consumerProfile: consumerProfileSchema.nullable(),
+  }),
+);
+
 /* exported TypeScript helpers -------------------------------------------- */
-export type UserDTO = z.infer<typeof userSchema>;
+export type UserDTO = z.infer<typeof userWithPorfilesSchema>;
 export type ConsumerProfileDTO = z.infer<typeof consumerProfileSchema>;

@@ -1,7 +1,7 @@
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "../ui/button";
@@ -13,58 +13,41 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { ProductCategoryDTO } from "./product-category.schema";
+import { ILoanApplication } from "./loan-application.schema";
 
-export const productCategoryTableColumns: ColumnDef<ProductCategoryDTO>[] = [
-  /* name (linked) ------------------------------------------------- */
+export const loanApplicationTableColumns: ColumnDef<ILoanApplication>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
-    cell: ({ row }) => (
-      <a
-        href={`/product-categories/${row.original.id}`}
-        className="hover:text-blue-500"
-      >
-        {row.original.name}
-      </a>
-    ),
-  },
-
-  /* description -------------------------------------------------- */
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => row.original.description ?? "—",
-  },
-
-  /* status badge -------------------------------------------------- */
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    accessorKey: "consumer",
+    header: "Applicant",
     cell: ({ row }) => {
-      const status = row.original.status;
-      const variant =
-        status === "active"
-          ? "success"
-          : status === "inactive"
-            ? "secondary"
-            : "destructive";
-
-      return (
-        <Badge variant={variant} className="w-full justify-center">
-          {status.toLowerCase()}
-        </Badge>
-      );
+      const a = row.original;
+      return `${a.consumer.user.first_name} ${a.consumer.user.last_name}`;
     },
   },
-
-  /* action column ------------------------------------------------- */
+  {
+    accessorKey: "requested_amount",
+    header: "Amount (₹)",
+    cell: ({ row }) =>
+      row.original.requested_amount?.toLocaleString("en-IN") ?? "—",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => <Badge>{row.original.status}</Badge>,
+  },
+  {
+    accessorKey: "application_date",
+    header: "Applied on",
+    cell: ({ row }) => format(row.original.application_date, "PPP"),
+  },
+  {
+    accessorKey: "loan_offer",
+    header: "Loan offer",
+    cell: ({ row }) => row.original.selectedOffer?.offer_name ?? "—",
+  },
   {
     id: "actions",
+    header: "",
     enableHiding: false,
     cell: ({ row, table }) => {
       const offer = row.original;
@@ -86,7 +69,7 @@ export const productCategoryTableColumns: ColumnDef<ProductCategoryDTO>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(offer.id)}
             >
-              Copy ID
+              Copy Loan Application ID
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

@@ -117,7 +117,7 @@ export const loanOfferTableColumns: ColumnDef<LoanOfferDTO>[] = [
             <DropdownMenuSeparator />
 
             <DropdownMenuItem onClick={() => setEditing?.(offer)}>
-              Edit / Update
+              Edit
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
