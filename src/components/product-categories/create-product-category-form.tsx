@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { ProductCategoryStatus } from "./product-category.interface";
+import { productCategoryStatusEnum } from "./product-category.schema";
 
 export function CreateProductCategoryForm() {
   const { toast } = useToast();
@@ -34,11 +34,6 @@ export function CreateProductCategoryForm() {
   // Define the form.
   const form = useForm<z.infer<typeof createProductCategorySchema>>({
     resolver: zodResolver(createProductCategorySchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      status: ProductCategoryStatus.INACTIVE,
-    },
   });
 
   async function onSubmit(values: z.infer<typeof createProductCategorySchema>) {
@@ -109,17 +104,19 @@ export function CreateProductCategoryForm() {
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={ProductCategoryStatus.INACTIVE}
+                  defaultValue={productCategoryStatusEnum.options[0]}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select product category status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(ProductCategoryStatus).map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </SelectItem>
-                    ))}
+                    {Object.values(productCategoryStatusEnum.options).map(
+                      (status) => (
+                        <SelectItem key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </SelectItem>
+                      ),
+                    )}
                   </SelectContent>
                 </Select>
               </FormControl>
