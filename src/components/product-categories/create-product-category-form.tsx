@@ -65,7 +65,7 @@ export function CreateProductCategoryForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category Name</FormLabel>
+              <FormLabel>Category Name *</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., Home Appliances" {...field} />
               </FormControl>

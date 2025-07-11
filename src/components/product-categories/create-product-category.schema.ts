@@ -12,7 +12,12 @@ export const createProductCategorySchema = z.object({
   description: z
     .string()
     .min(10, { message: "Description must contain a minimun of 10 characters" })
-    .max(500, { message: "Description must not exceed 500 characters" }),
+    .max(500, { message: "Description must not exceed 500 characters" })
+    .optional(),
 
   status: productCategoryStatusEnum,
 });
+
+export type CreateProductCategoryDTO = z.infer<
+  typeof createProductCategorySchema
+>;
