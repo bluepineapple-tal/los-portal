@@ -1,4 +1,4 @@
-import { ProductCategoryDTO } from "@/components/product-categories/product-category.interface";
+import { ProductCategoryDTO } from "@/components/product-categories/product-category.schema";
 import {
   Card,
   CardDescription,

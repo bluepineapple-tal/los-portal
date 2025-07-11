@@ -1,10 +1,7 @@
-import {
-  ICreateProductCategory,
-  ProductCategoryDTO,
-} from "@/components/product-categories/product-category.interface";
-
+import { CreateProductCategoryDTO } from "@/components/product-categories/create-product-category.schema";
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
+import { ProductCategoryDTO } from "@/components/product-categories/product-category.schema";
 
 /**
  * Creates a new product Category using the provided data.
@@ -13,7 +10,7 @@ import { fetchApi } from "../fetch-api";
  * @returns The newly created product Category (as returned by the server)
  */
 export async function createProductCategory(
-  data: ICreateProductCategory,
+  data: CreateProductCategoryDTO,
 ): Promise<ProductCategoryDTO> {
   return fetchApi<ProductCategoryDTO>(`${API_BASE_URL}/product-categories`, {
     method: "POST",
@@ -31,7 +28,7 @@ export async function createProductCategory(
  */
 export async function updateProductCategory(
   id: string,
-  data: Partial<ICreateProductCategory>,
+  data: Partial<CreateProductCategoryDTO>,
 ): Promise<ProductCategoryDTO> {
   return fetchApi<ProductCategoryDTO>(
     `${API_BASE_URL}/product-category/${id}`,

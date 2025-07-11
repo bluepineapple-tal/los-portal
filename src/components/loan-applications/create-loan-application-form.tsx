@@ -1,7 +1,6 @@
 "use client";
 
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -36,18 +35,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { LoanApplicationDTO } from "./loan-application.schema";
 
 export function CreateLoanApplicationForm({
   userId,
   offers,
   categories,
+  onFormSubmit,
 }: Readonly<{
   userId: string;
   offers: LoanOfferDTO[];
   categories: ProductCategoryDTO[];
+  onFormSubmit?: (app: LoanApplicationDTO) => void;
 }>) {
   const { toast } = useToast();
-  const router = useRouter();
   const [user, setUser] = useState<UserDTO>();
 
   useEffect(() => {
@@ -66,6 +67,10 @@ export function CreateLoanApplicationForm({
   /* ---------------------------- form setup ---------------------------- */
   const form = useForm<ICreateLoanApplication>({
     resolver: zodResolver(createLoanApplicationSchema),
+    defaultValues: {
+      monthly_income: 0,
+      requested_amount: 0,
+    },
   });
 
   /* submit -------------------------------------------------------- */
@@ -75,7 +80,7 @@ export function CreateLoanApplicationForm({
       return;
     }
 
-    await createLoanApplication({
+    const response = await createLoanApplication({
       consumerId: user.consumerProfile.id,
       application_date: new Date(),
       status: "submitted",
@@ -86,7 +91,10 @@ export function CreateLoanApplicationForm({
       style: { backgroundColor: "#4ade80" },
       title: "Application submitted",
     });
-    router.push("/loan-applications");
+
+    if (onFormSubmit) {
+      onFormSubmit(response);
+    }
   };
 
   if (!user?.consumerProfile) return null;

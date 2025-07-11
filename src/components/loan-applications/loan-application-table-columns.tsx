@@ -13,9 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { ILoanApplication } from "./loan-application.schema";
+import { LoanApplicationDTO } from "./loan-application.schema";
 
-export const loanApplicationTableColumns: ColumnDef<ILoanApplication>[] = [
+export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
   {
     accessorKey: "consumer",
     header: "Applicant",

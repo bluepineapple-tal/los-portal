@@ -11,6 +11,7 @@ import { ThemeProvider } from "@/components/contexts/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import { PageTitleProvider } from "@/components/contexts/page-title-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,9 +45,13 @@ export default function RootLayout({
             <AuthProvider>
               <SidebarProvider>
                 <AppSidebar variant="inset" />
+
                 <SidebarInset>
-                  <SiteHeader />
-                  <div className="flex flex-1 flex-col">{children}</div>
+                  <PageTitleProvider>
+                    <SiteHeader />
+
+                    <div className="flex flex-1 flex-col">{children}</div>
+                  </PageTitleProvider>
                 </SidebarInset>
               </SidebarProvider>
             </AuthProvider>

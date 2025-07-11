@@ -13,11 +13,11 @@ import { API_BASE_URL } from "@/lib/constants";
 
 import { EditLoanApplicationForm } from "./edit-loan-application-form";
 import { loanApplicationTableColumns } from "./loan-application-table-columns";
-import { ILoanApplication } from "./loan-application.schema";
+import { LoanApplicationDTO } from "./loan-application.schema";
 
 export function LoanApplicationList() {
-  const [apps, setApps] = useState<ILoanApplication[]>([]);
-  const [editing, setEditing] = useState<ILoanApplication | null>(null);
+  const [apps, setApps] = useState<LoanApplicationDTO[]>([]);
+  const [editing, setEditing] = useState<LoanApplicationDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [version, setVersion] = useState(0);

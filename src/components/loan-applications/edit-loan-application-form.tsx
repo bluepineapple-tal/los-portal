@@ -22,13 +22,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   applicationStatusEnum,
-  ILoanApplication,
+  LoanApplicationDTO,
   loanApplicationSchema,
 } from "./loan-application.schema";
 
 type Props = {
-  app: ILoanApplication;
-  onSuccess(updated: ILoanApplication): void;
+  app: LoanApplicationDTO;
+  onSuccess(updated: LoanApplicationDTO): void;
   onCancel(): void;
 };
 
@@ -37,18 +37,18 @@ export function EditLoanApplicationForm({
   onSuccess,
   onCancel,
 }: Readonly<Props>) {
-  const form = useForm<Pick<ILoanApplication, "status">>({
+  const form = useForm<Pick<LoanApplicationDTO, "status">>({
     resolver: zodResolver(loanApplicationSchema.pick({ status: true })),
     defaultValues: { status: app.status },
   });
 
-  async function submit(values: { status: ILoanApplication["status"] }) {
+  async function submit(values: { status: LoanApplicationDTO["status"] }) {
     const res = await fetch(`${API_BASE_URL}/loan-applications/${app.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    const updated: ILoanApplication = await res.json();
+    const updated: LoanApplicationDTO = await res.json();
     onSuccess(updated);
   }
 
