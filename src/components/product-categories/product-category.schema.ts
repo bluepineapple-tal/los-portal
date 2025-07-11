@@ -2,9 +2,9 @@ import { z } from "zod";
 
 /*  Enum – keep values 1-to-1 with backend `ProductCategoryStatus`            */
 export const productCategoryStatusEnum = z.enum([
-  "ACTIVE",
-  "INACTIVE",
-  "ARCHIVED",
+  "active",
+  "inactive",
+  "discontinued",
 ] as const);
 
 export const productCategorySchema = z.object({
