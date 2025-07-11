@@ -342,10 +342,12 @@ export function DataTable<TData extends object>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
-              <ColumnsIcon />
-              <span className="hidden lg:inline">Customize columns</span>
+              <ColumnsIcon width={16} height={16} />
+              <span className="hidden lg:inline lg:ml-1">
+                Customize columns
+              </span>
               <span className="lg:hidden">Columns</span>
-              <ChevronDownIcon />
+              <ChevronDownIcon width={16} height={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
