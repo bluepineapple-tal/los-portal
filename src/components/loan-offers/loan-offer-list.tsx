@@ -6,13 +6,13 @@ import { DataTable } from "@/components/ui/data-table";
 import { API_BASE_URL } from "@/lib/constants";
 
 import { loanOfferTableColumns } from "./loan-offer-table-columns";
-import { ILoanOffer } from "./loan-offer.schema";
+import { LoanOfferDTO } from "./loan-offer.schema";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { EditLoanOfferForm } from "./edit-loan-offer-form";
 
 export function LoanOfferList() {
-  const [offers, setOffers] = useState<ILoanOffer[]>([]);
-  const [editing, setEditing] = useState<ILoanOffer | null>(null);
+  const [offers, setOffers] = useState<LoanOfferDTO[]>([]);
+  const [editing, setEditing] = useState<LoanOfferDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [version, setVersion] = useState(0);
@@ -32,7 +32,7 @@ export function LoanOfferList() {
           );
         }
 
-        const data = (await response.json()) as ILoanOffer[];
+        const data = (await response.json()) as LoanOfferDTO[];
         setOffers(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

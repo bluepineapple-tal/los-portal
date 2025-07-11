@@ -1,4 +1,4 @@
-import { ILoanOffer } from "@/components/loan-offers/loan-offer.schema";
+import { LoanOfferDTO } from "@/components/loan-offers/loan-offer.schema";
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
 import { ICreateLoanOffer } from "@/components/loan-offers/create-loan-offer.schema";
@@ -11,8 +11,8 @@ import { ICreateLoanOffer } from "@/components/loan-offers/create-loan-offer.sch
  */
 export async function getLoanOffersByModelId(data: {
   productModelId: string;
-}): Promise<ILoanOffer[]> {
-  return fetchApi<ILoanOffer[]>(
+}): Promise<LoanOfferDTO[]> {
+  return fetchApi<LoanOfferDTO[]>(
     `${API_BASE_URL}/loan-offers/${data.productModelId}`,
     {
       method: "GET",
@@ -30,8 +30,8 @@ export async function getLoanOffersByModelId(data: {
  */
 export async function createLoanOffer(
   data: ICreateLoanOffer,
-): Promise<ILoanOffer> {
-  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers`, {
+): Promise<LoanOfferDTO> {
+  return fetchApi<LoanOfferDTO>(`${API_BASE_URL}/loan-offers`, {
     method: "POST",
     // @ts-expect-error body init
     body: data,
@@ -48,8 +48,8 @@ export async function createLoanOffer(
 export async function updateLoanOffer(
   id: string,
   data: Partial<ICreateLoanOffer>,
-): Promise<ILoanOffer> {
-  return fetchApi<ILoanOffer>(`${API_BASE_URL}/loan-offers/${id}`, {
+): Promise<LoanOfferDTO> {
+  return fetchApi<LoanOfferDTO>(`${API_BASE_URL}/loan-offers/${id}`, {
     method: "PUT",
     // @ts-expect-error body init
     body: data,

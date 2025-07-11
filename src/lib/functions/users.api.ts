@@ -1,7 +1,8 @@
-import { IUser } from "@/components/onboarding/user.schema";
+import { CreateUserDTO } from "@/components/onboarding/create-user.schema";
 
 import { API_BASE_URL } from "../constants";
 import { fetchApi } from "../fetch-api";
+import { UserDTO } from "@/components/onboarding/user.schema";
 
 /* --------------------------------------------------------------- */
 /* helper – decides JSON vs FormData automatically                 */
@@ -20,8 +21,8 @@ function makeBody(data: Record<string, any>): BodyInit {
 /* CRUD                                                            */
 /* --------------------------------------------------------------- */
 
-export async function createUser(data: IUser): Promise<IUser> {
-  return fetchApi<IUser>(`${API_BASE_URL}/users`, {
+export async function createUser(data: CreateUserDTO): Promise<UserDTO> {
+  return fetchApi<UserDTO>(`${API_BASE_URL}/users`, {
     method: "POST",
     body: makeBody(data),
   });
@@ -29,16 +30,16 @@ export async function createUser(data: IUser): Promise<IUser> {
 
 export async function updateUser(
   id: string,
-  data: Partial<IUser>,
-): Promise<IUser> {
-  return fetchApi<IUser>(`${API_BASE_URL}/users/${id}`, {
+  data: Partial<CreateUserDTO>,
+): Promise<UserDTO> {
+  return fetchApi<UserDTO>(`${API_BASE_URL}/users/${id}`, {
     method: "PUT",
     body: makeBody(data),
   });
 }
 
-export async function getMe(): Promise<IUser> {
-  return fetchApi<IUser>(`${API_BASE_URL}/users/me`, { method: "GET" });
+export async function getMe(id: string): Promise<UserDTO> {
+  return fetchApi<UserDTO>(`${API_BASE_URL}/users/${id}`, { method: "GET" });
 }
 
 export async function deleteUser(id: string): Promise<{ success: boolean }> {

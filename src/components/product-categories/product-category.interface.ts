@@ -4,17 +4,6 @@ export enum ProductCategoryStatus {
   INACTIVE = "inactive",
   DISCONTINUED = "discontinued",
 }
-
-export interface IProductCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  status: ProductCategoryStatus;
-  created_at: Date;
-  updated_at: Date;
-}
-
 export interface ICreateProductCategory {
   name: string;
   description: string;

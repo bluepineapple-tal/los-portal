@@ -1,4 +1,4 @@
-import { IProductCategory } from "@/components/product-categories/product-category.interface";
+import { ProductCategoryDTO } from "@/components/product-categories/product-category.interface";
 import {
   Card,
   CardDescription,
@@ -26,7 +26,7 @@ export default async function ProductCategoryPage({
   }
 
   const productcategory =
-    (await productcategoryResponse.json()) as IProductCategory;
+    (await productcategoryResponse.json()) as ProductCategoryDTO;
 
   return (
     <div>

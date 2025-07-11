@@ -15,19 +15,19 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 
 import { SheetHeader, SheetTitle } from "../ui/sheet";
-import { ILoanOffer } from "./loan-offer.schema";
+import { LoanOfferDTO } from "./loan-offer.schema";
 
 /**
  *    Select & drag-handle columns are automatically supplied
  *     by <DataTable>, so we define only *business* columns here.
  */
-export const loanOfferTableColumns: ColumnDef<ILoanOffer>[] = [
+export const loanOfferTableColumns: ColumnDef<LoanOfferDTO>[] = [
   {
     accessorKey: "offer_name",
     header: "Offer Name",
     meta: {
       detailTrigger: true,
-      detailRenderer: (offer: ILoanOffer) => (
+      detailRenderer: (offer: LoanOfferDTO) => (
         <>
           <SheetHeader>
             <SheetTitle>{offer.offer_name}</SheetTitle>

@@ -10,7 +10,7 @@ import {
   createLoanOfferSchema,
   ICreateLoanOffer,
 } from "@/components/loan-offers/create-loan-offer.schema";
-import { ILoanOffer } from "@/components/loan-offers/loan-offer.schema";
+import { LoanOfferDTO } from "@/components/loan-offers/loan-offer.schema";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -34,9 +34,9 @@ import { updateLoanOffer } from "@/lib/functions/loan-offers.api";
 import { useToast } from "@/hooks/use-toast";
 
 interface EditLoanOfferFormProps {
-  offer: ILoanOffer;
+  offer: LoanOfferDTO;
   /** Tell parent we’re done so it can close the Sheet & refresh the row. */
-  onSuccess(updated: ILoanOffer): void;
+  onSuccess(updated: LoanOfferDTO): void;
   /** Optional: close without saving. */
   onCancel?(): void;
 }
