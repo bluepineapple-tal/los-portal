@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { API_BASE_URL } from "@/lib/constants";
+import { API_BASE_URL, URLS } from "@/lib/constants";
 import { fetchApi } from "@/lib/fetch-api";
 import { createLoanApplication } from "@/lib/functions/loan-applications.api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,20 +36,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { LoanApplicationDTO } from "./loan-application.schema";
 
 export function CreateLoanApplicationForm({
   userId,
   offers,
   categories,
-  onFormSubmit,
 }: Readonly<{
   userId: string;
   offers: LoanOfferDTO[];
   categories: ProductCategoryDTO[];
-  onFormSubmit?: (app: LoanApplicationDTO) => void;
 }>) {
   const { toast } = useToast();
+  const router = useRouter();
   const [user, setUser] = useState<UserDTO>();
 
   useEffect(() => {
@@ -94,7 +93,7 @@ export function CreateLoanApplicationForm({
       title: "Application submitted",
     });
 
-    onFormSubmit?.(response);
+    router.replace(`${URLS.LOAN_APPLICATIONS}/${response.id}`);
   };
 
   if (!user?.consumerProfile) return null;

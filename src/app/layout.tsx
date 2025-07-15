@@ -12,6 +12,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { PageTitleProvider } from "@/components/contexts/page-title-provider";
+import TanstackQueryClientProvider from "@/components/contexts/tanstack-query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,17 +44,19 @@ export default function RootLayout({
             <NextTopLoader />
 
             <AuthProvider>
-              <SidebarProvider>
-                <AppSidebar variant="inset" />
+              <TanstackQueryClientProvider>
+                <SidebarProvider>
+                  <AppSidebar variant="inset" />
 
-                <SidebarInset>
-                  <PageTitleProvider>
-                    <SiteHeader />
+                  <SidebarInset>
+                    <PageTitleProvider>
+                      <SiteHeader />
 
-                    <div className="flex flex-1 flex-col">{children}</div>
-                  </PageTitleProvider>
-                </SidebarInset>
-              </SidebarProvider>
+                      <div className="flex flex-1 flex-col">{children}</div>
+                    </PageTitleProvider>
+                  </SidebarInset>
+                </SidebarProvider>
+              </TanstackQueryClientProvider>
             </AuthProvider>
 
             <Toaster />

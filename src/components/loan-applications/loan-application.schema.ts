@@ -24,6 +24,10 @@ export const sourceOfIncomeEnum = z.enum([
 
 export const kycStatusEnum = z.enum(["verified", "failed", "pending"] as const);
 export type KycStatus = z.infer<typeof kycStatusEnum>;
+export type ApplicationStatus = z.infer<typeof applicationStatusEnum>;
+
+const creditCheckSchema = z.object({ credit_score: z.number() }).passthrough();
+const kycCheckSchema = z.object({ status: kycStatusEnum }).passthrough();
 
 export const loanApplicationSchema = z.object({
   id: z.string().uuid(),
@@ -46,6 +50,14 @@ export const loanApplicationSchema = z.object({
   /* KYC snapshot */
   monthly_income: z.number(),
   source_of_income: sourceOfIncomeEnum,
+
+  externalChecks: z
+    .object({
+      kyc: kycCheckSchema.optional(),
+      aml: z.unknown().optional(),
+      credit: creditCheckSchema.optional(),
+    })
+    .optional(),
 });
 
 /*  Convenience TS type                                                       */

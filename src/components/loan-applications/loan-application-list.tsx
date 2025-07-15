@@ -11,44 +11,54 @@ import {
 } from "@/components/ui/sheet";
 import { Perm } from "@/lib/auth/permissions";
 import { API_BASE_URL } from "@/lib/constants";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 
 import { useHasPerm } from "../contexts/authz-provider";
 import { EditLoanApplicationForm } from "./edit-loan-application-form";
 import { loanApplicationTableColumns } from "./loan-application-table-columns";
 import { LoanApplicationDTO } from "./loan-application.schema";
+import { useSocket } from "@/hooks/use-socket";
 
 export function LoanApplicationList() {
-  const [apps, setApps] = useState<LoanApplicationDTO[]>([]);
-  const [editing, setEditing] = useState<LoanApplicationDTO | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [version, setVersion] = useState(0);
-
   const canEdit = useHasPerm(Perm.LOAN_UPDATE);
+  const [editing, setEditing] = useState<LoanApplicationDTO | null>(null);
 
+  /* ─────────── React-Query ─────────── */
+  const qc = useQueryClient();
+
+  const {
+    data: apps = [],
+    isPending,
+    error,
+  } = useQuery<LoanApplicationDTO[]>({
+    queryKey: ["loan-apps"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE_URL}/loan-applications`);
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  /* ─────────── Live invalidation over WS ─────────── */
+  const socket = useSocket();
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/loan-applications`);
-        if (!res.ok) throw new Error(res.statusText);
-        setApps(await res.json());
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    if (!socket) return; // wait until socket is ready
+    const handler = () => qc.invalidateQueries({ queryKey: ["loan-apps"] });
+    socket.on("loan-status", handler);
+    return () => {
+      socket.off("loan-status", handler);
+    };
+  }, [socket, qc]);
 
-  if (loading) return <p>Loading loan applications…</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
+  /* ─────────── UI states ─────────── */
+  if (isPending) return <p>Loading loan applications…</p>;
+  if (error) return <p className="text-red-500">Error: {error.message}</p>;
   if (!apps.length) return <p>No applications yet.</p>;
 
   return (
     <>
       <DataTable
-        key={version}
         columns={loanApplicationTableColumns}
         data={apps}
         meta={{ setEditing, canEdit }}
@@ -68,10 +78,14 @@ export function LoanApplicationList() {
                 <EditLoanApplicationForm
                   app={editing}
                   onSuccess={(updated) => {
-                    setApps((prev) =>
-                      prev.map((a) => (a.id === updated.id ? updated : a)),
+                    /** update cache in-place, no extra state needed */
+                    qc.setQueryData<LoanApplicationDTO[]>(
+                      ["loan-apps"],
+                      (old) =>
+                        old
+                          ? old.map((a) => (a.id === updated.id ? updated : a))
+                          : [updated],
                     );
-                    setVersion((v) => v + 1);
                     setEditing(null);
                   }}
                   onCancel={() => setEditing(null)}
