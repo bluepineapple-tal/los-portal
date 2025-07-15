@@ -73,6 +73,8 @@ export function CreateLoanApplicationForm({
     },
   });
 
+  const requestedAmount = form.watch("requested_amount") ?? 0;
+
   /* submit -------------------------------------------------------- */
   const onSubmit = async (values: ICreateLoanApplication) => {
     if (!user?.consumerProfile?.id) {
@@ -92,14 +94,19 @@ export function CreateLoanApplicationForm({
       title: "Application submitted",
     });
 
-    if (onFormSubmit) {
-      onFormSubmit(response);
-    }
+    onFormSubmit?.(response);
   };
 
   if (!user?.consumerProfile) return null;
 
   const cp = user.consumerProfile; // shorthand
+
+  const validOffers = offers.filter((o) => {
+    if (!o.is_active) return false;
+    const min = parseFloat(o.min_amount);
+    const max = parseFloat(o.max_amount);
+    return requestedAmount >= min && requestedAmount <= max;
+  });
 
   /* ------------------------------ UI --------------------------------- */
   return (
@@ -219,6 +226,29 @@ export function CreateLoanApplicationForm({
           )}
         />
 
+        {/* amount ---------------------------------------------------- */}
+        <FormField
+          control={form.control}
+          name="requested_amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Requested amount *</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={1000}
+                  step={1}
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(parseInt(e.target.value, 10) || 0)
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* loan offer ----------------------------------------------- */}
         <FormField
           control={form.control}
@@ -227,9 +257,13 @@ export function CreateLoanApplicationForm({
             <FormItem>
               <FormLabel>Loan offer *</FormLabel>
               <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  disabled={requestedAmount <= 0}
+                >
                   <SelectTrigger>
-                    {field.value ? (
+                    {field.value && requestedAmount > 0 ? (
                       <>
                         <div className="text-sm font-medium">
                           {offers.find((o) => o.id === field.value)?.offer_name}
@@ -251,46 +285,27 @@ export function CreateLoanApplicationForm({
                   </SelectTrigger>
 
                   <SelectContent className="w-[28rem]">
-                    {offers
-                      .filter((o) => o.is_active) // hide inactive
-                      .map((o) => (
+                    {validOffers.length > 0 ? (
+                      validOffers.map((o) => (
                         <SelectItem key={o.id} value={o.id} className="py-3">
                           <div className="text-sm font-medium">
                             {o.offer_name}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {o.interest_rate}% &bull; ₹
-                            {Number(o.min_amount).toLocaleString()} – ₹
+                            {Number(o.min_amount).toLocaleString()}–₹
                             {Number(o.max_amount).toLocaleString()} &bull;{" "}
-                            {o.tenure_months} months
+                            {o.tenure_months}m
                           </div>
                         </SelectItem>
-                      ))}
+                      ))
+                    ) : (
+                      <SelectItem disabled value="no-offer">
+                        No offers for amount ₹{requestedAmount.toLocaleString()}
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* amount ---------------------------------------------------- */}
-        <FormField
-          control={form.control}
-          name="requested_amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Requested amount *</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={1000}
-                  step={1}
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(parseInt(e.target.value) || 0)
-                  }
-                />
               </FormControl>
               <FormMessage />
             </FormItem>
