@@ -7,6 +7,8 @@ import {
 } from "supertokens-auth-react/recipe/session";
 import { AccessDeniedScreen } from "supertokens-auth-react/recipe/session/prebuiltui";
 
+import { AuthzProvider } from "./authz-provider";
+
 type Props = {
   children: ReactNode;
 };
@@ -21,7 +23,9 @@ const AuthProvider: FC<Props> = ({ children }) => {
     children
   ) : (
     <SessionAuth requireAuth accessDeniedScreen={AccessDeniedScreen}>
-      <ProfileGate>{children}</ProfileGate>
+      <ProfileGate>
+        <AuthzProvider>{children}</AuthzProvider>
+      </ProfileGate>
     </SessionAuth>
   );
 };

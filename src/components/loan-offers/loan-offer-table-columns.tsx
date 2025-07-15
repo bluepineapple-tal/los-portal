@@ -94,9 +94,10 @@ export const loanOfferTableColumns: ColumnDef<LoanOfferDTO>[] = [
     cell: ({ row, table }) => {
       const offer = row.original;
       // grab setter we passed via meta
-      // @ts-expect-error meta
-      const setEditing = table.options.meta?.setEditing;
-
+      const { setEditing, canEdit } = table.options.meta as {
+        setEditing: (o: LoanOfferDTO) => void;
+        canEdit: boolean;
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -105,6 +106,7 @@ export const loanOfferTableColumns: ColumnDef<LoanOfferDTO>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
@@ -114,11 +116,14 @@ export const loanOfferTableColumns: ColumnDef<LoanOfferDTO>[] = [
               Copy Offer ID
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem onClick={() => setEditing?.(offer)}>
-              Edit
-            </DropdownMenuItem>
+            {canEdit && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setEditing(offer)}>
+                  Edit
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

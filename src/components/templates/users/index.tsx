@@ -3,8 +3,10 @@
 import { FC } from "react";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
+import { RequirePerm } from "@/components/auth/RequirePerm";
 import { UserDTO } from "@/components/onboarding/user.schema";
 import { UserList } from "@/components/users/user-list";
+import { Perm } from "@/lib/auth/permissions";
 
 interface Props {
   users: UserDTO[];
@@ -21,10 +23,12 @@ export const UsersPageTemplate: FC<Props> = ({ users }) => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="mb-4 text-xl font-bold">Loan Offers</h1>
+    <RequirePerm perms={[Perm.AUTH_READ]}>
+      <div className="p-6">
+        <h1 className="mb-4 text-xl font-bold">Loan Offers</h1>
 
-      <UserList users={users} />
-    </div>
+        <UserList users={users} />
+      </div>
+    </RequirePerm>
   );
 };

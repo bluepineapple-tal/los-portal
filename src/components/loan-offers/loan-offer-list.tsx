@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/ui/data-table";
+import { Perm } from "@/lib/auth/permissions";
 import { API_BASE_URL } from "@/lib/constants";
 
-import { loanOfferTableColumns } from "./loan-offer-table-columns";
-import { LoanOfferDTO } from "./loan-offer.schema";
+import { useHasPerm } from "../contexts/authz-provider";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { EditLoanOfferForm } from "./edit-loan-offer-form";
+import { loanOfferTableColumns } from "./loan-offer-table-columns";
+import { LoanOfferDTO } from "./loan-offer.schema";
 
 export function LoanOfferList() {
   const [offers, setOffers] = useState<LoanOfferDTO[]>([]);
@@ -16,6 +18,8 @@ export function LoanOfferList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [version, setVersion] = useState(0);
+
+  const canEdit = useHasPerm(Perm.LOAN_UPDATE);
 
   // Fetch loan offers for the selected Make and Model
   useEffect(() => {
@@ -54,37 +58,35 @@ export function LoanOfferList() {
         key={version}
         columns={loanOfferTableColumns}
         data={offers}
-        meta={{ setEditing }}
-        onReorder={(prev, next) => {
-          /* Persist new order to backend if needed */
-          return next;
-        }}
+        meta={{ setEditing, canEdit }}
       />
 
-      <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
-        <SheetContent side="right" className="flex flex-col gap-6">
-          {editing && (
-            <>
-              <SheetHeader>
-                <SheetTitle>Edit “{editing.offer_name}”</SheetTitle>
-              </SheetHeader>
+      {canEdit && (
+        <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+          <SheetContent side="right" className="flex flex-col gap-6">
+            {editing && (
+              <>
+                <SheetHeader>
+                  <SheetTitle>Edit “{editing.offer_name}”</SheetTitle>
+                </SheetHeader>
 
-              <EditLoanOfferForm
-                offer={editing}
-                onSuccess={(updated) => {
-                  // update row in local state -> instant optimistic UI
-                  setOffers((prev) =>
-                    prev.map((o) => (o.id === updated.id ? updated : o)),
-                  );
-                  setVersion((v) => v + 1);
-                  setEditing(null);
-                }}
-                onCancel={() => setEditing(null)}
-              />
-            </>
-          )}
-        </SheetContent>
-      </Sheet>
+                <EditLoanOfferForm
+                  offer={editing}
+                  onSuccess={(updated) => {
+                    // update row in local state -> instant optimistic UI
+                    setOffers((prev) =>
+                      prev.map((o) => (o.id === updated.id ? updated : o)),
+                    );
+                    setVersion((v) => v + 1);
+                    setEditing(null);
+                  }}
+                  onCancel={() => setEditing(null)}
+                />
+              </>
+            )}
+          </SheetContent>
+        </Sheet>
+      )}
     </>
   );
 }

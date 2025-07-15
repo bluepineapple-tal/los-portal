@@ -50,10 +50,12 @@ export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
     header: "",
     enableHiding: false,
     cell: ({ row, table }) => {
-      const offer = row.original;
+      const app = row.original;
       // grab setter we passed via meta
-      // @ts-expect-error meta
-      const setEditing = table.options.meta?.setEditing;
+      const { setEditing, canEdit } = table.options.meta as {
+        setEditing: (o: LoanApplicationDTO) => void;
+        canEdit: boolean;
+      };
 
       return (
         <DropdownMenu>
@@ -67,16 +69,19 @@ export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(offer.id)}
+              onClick={() => navigator.clipboard.writeText(app.id)}
             >
               Copy Loan Application ID
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem onClick={() => setEditing?.(offer)}>
-              Edit
-            </DropdownMenuItem>
+            {canEdit && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setEditing?.(app)}>
+                  Edit
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

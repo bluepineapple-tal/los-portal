@@ -2,7 +2,9 @@
 
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
+import { RequirePerm } from "@/components/auth/RequirePerm";
 import { ProductCategoryList } from "@/components/product-categories/product-category-list";
+import { Perm } from "@/lib/auth/permissions";
 
 export const ProductCategoryPageTemplate = () => {
   const session = useSessionContext();
@@ -16,10 +18,12 @@ export const ProductCategoryPageTemplate = () => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="mb-4 text-xl font-bold">Product Categories</h1>
+    <RequirePerm perms={[Perm.PRODUCT_MANAGE]}>
+      <div className="p-6">
+        <h1 className="mb-4 text-xl font-bold">Product Categories</h1>
 
-      <ProductCategoryList />
-    </div>
+        <ProductCategoryList />
+      </div>
+    </RequirePerm>
   );
 };
