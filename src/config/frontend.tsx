@@ -21,28 +21,28 @@ export const frontendConfig = (): SuperTokensConfig => {
     appInfo,
     recipeList: [
       EmailPasswordReact.init({
-        signInAndUpFeature: {
-          signUpForm: {
-            formFields: [
-              {
-                id: "name",
-                label: "Full name",
-                placeholder: "Jane Doe",
-                validate: async (value) =>
-                  value.trim().length >= 3 ? undefined : "Name is too short",
-              },
-              {
-                id: "avatar",
-                label: "Avatar URL (optional)",
-                optional: true,
-                validate: async (value) =>
-                  value === "" || /^https?:\/\//.test(value)
-                    ? undefined
-                    : "Enter a valid URL",
-              },
-            ],
-          },
-        },
+        // signInAndUpFeature: {
+        //   signUpForm: {
+        //     formFields: [
+        //       {
+        //         id: "name",
+        //         label: "Full name",
+        //         placeholder: "Jane Doe",
+        //         validate: async (value) =>
+        //           value.trim().length >= 3 ? undefined : "Name is too short",
+        //       },
+        //       {
+        //         id: "avatar",
+        //         label: "Avatar URL (optional)",
+        //         optional: true,
+        //         validate: async (value) =>
+        //           value === "" || /^https?:\/\//.test(value)
+        //             ? undefined
+        //             : "Enter a valid URL",
+        //       },
+        //     ],
+        //   },
+        // },
       }),
       SessionReact.init(),
     ],

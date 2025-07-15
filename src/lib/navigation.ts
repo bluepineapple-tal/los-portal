@@ -4,7 +4,6 @@ import {
   // DatabaseIcon,
   FilePenIcon,
   FilesIcon,
-  FolderDown,
   // HelpCircleIcon,
   LayoutDashboardIcon,
   ListIcon,
@@ -46,23 +45,16 @@ export const NAV_MAIN: NavItem[] = [
     roles: ["consumer"],
   },
   {
-    title: "Product Categories",
-    url: "#",
-    icon: FolderDown,
+    title: "Create a New Category",
+    url: URLS.CREATE_PRODUCT_CATEGORIES,
+    icon: PlusCircleIcon,
     roles: ["super-admin", "vendor-manager"],
-    items: [
-      {
-        title: "Create a New Category",
-        url: URLS.CREATE_PRODUCT_CATEGORIES,
-        icon: PlusCircleIcon,
-        roles: ["super-admin", "vendor-manager"],
-      },
-      {
-        title: "View all Categories",
-        url: URLS.PRODUCT_CATEGORIES,
-        icon: ListIcon,
-      },
-    ],
+  },
+  {
+    title: "View all Categories",
+    url: URLS.PRODUCT_CATEGORIES,
+    icon: ListIcon,
+    roles: ["super-admin", "vendor-manager"],
   },
   // {
   //   title: "Analytics",
