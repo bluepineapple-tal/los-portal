@@ -8,7 +8,7 @@ const LoanApplicationsTemplate: FC = () => {
   return (
     <RequirePerm perms={[Perm.LOAN_READ]}>
       <div className="p-6">
-        <h1 className="mb-4 text-xl font-bold">Loan Offers</h1>
+        <h1 className="mb-4 text-xl font-bold">Loan Applications</h1>
 
         <LoanApplicationList />
       </div>
