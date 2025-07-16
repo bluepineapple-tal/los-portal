@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { forbidden } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
 import { Perm } from "@/lib/auth/permissions";
@@ -20,12 +20,11 @@ export function RequirePerm({
   children: ReactNode;
 }>) {
   const allowed = useHasPerm(...perms);
-  const router = useRouter();
 
   /* client-side redirect once the AuthZ context is ready */
   useEffect(() => {
-    if (!allowed) router.replace("/403");
-  }, [allowed, router]);
+    if (!allowed) forbidden();
+  }, [allowed]);
 
   if (!allowed) return null; // while redirecting → nothing
   return <>{children}</>;
