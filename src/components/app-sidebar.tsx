@@ -82,7 +82,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={user} />
+        {user ? (
+          <NavUser user={user} />
+        ) : (
+          <div className="p-4 text-center text-sm text-muted-foreground">
+            Loading profile…
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
