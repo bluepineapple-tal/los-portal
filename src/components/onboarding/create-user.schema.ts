@@ -32,7 +32,12 @@ export const createUserSchema = z.object({
   state: z.string().min(2, "State is required"),
   pin_code: z.string().regex(PIN_6_DIGIT, "PIN code must be 6 numeric digits"),
   /* KYC -------------------------------------------------------- */
-  aadhar_number: z.string().regex(AADHAAR_REGEX, "Aadhaar must be 12 digits"),
+  aadhar_number: z
+    .string()
+    .regex(
+      AADHAAR_REGEX,
+      "Aadhaar must be 12 digits & cannot start with 0 or 1",
+    ),
   pan_number: z
     .string()
     .regex(
