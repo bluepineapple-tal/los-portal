@@ -13,13 +13,16 @@ type Props = {
   children: ReactNode;
 };
 
+const PUBLIC_ROUTES = ["/auth", "/"];
+
 const AuthProvider: FC<Props> = ({ children }) => {
   const pathname = usePathname();
-  const isAuthRoute = pathname.startsWith("/auth");
-
+  const isPublic: boolean = PUBLIC_ROUTES.some((path) => {
+    return pathname.startsWith(path);
+  });
   /* 🔒 Protect everything except /auth/* */
 
-  return isAuthRoute ? (
+  return isPublic ? (
     children
   ) : (
     <SessionAuth requireAuth accessDeniedScreen={AccessDeniedScreen}>
@@ -36,7 +39,7 @@ export default AuthProvider;
 /* internal guard – reads profileComplete from the JWT                 */
 /* ------------------------------------------------------------------ */
 
-const EXEMPT_PATHS = ["/onboarding", "/auth"];
+const EXEMPT_PATHS = ["/onboarding", "/auth", "/"];
 
 const ProfileGate: FC<{ children: ReactNode }> = ({ children }) => {
   const session = useSessionContext();
