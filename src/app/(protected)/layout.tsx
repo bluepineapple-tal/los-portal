@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -12,7 +12,6 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { PageTitleProvider } from "@/components/contexts/page-title-provider";
-import TanstackQueryClientProvider from "@/components/contexts/tanstack-query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,19 +43,17 @@ export default function RootLayout({
             <NextTopLoader />
 
             <AuthProvider>
-              <TanstackQueryClientProvider>
-                <SidebarProvider>
-                  <AppSidebar variant="inset" />
+              <SidebarProvider>
+                <AppSidebar variant="inset" />
 
-                  <SidebarInset>
-                    <PageTitleProvider>
-                      <SiteHeader />
+                <SidebarInset>
+                  <PageTitleProvider>
+                    <SiteHeader />
 
-                      <div className="flex flex-1 flex-col">{children}</div>
-                    </PageTitleProvider>
-                  </SidebarInset>
-                </SidebarProvider>
-              </TanstackQueryClientProvider>
+                    <div className="flex flex-1 flex-col">{children}</div>
+                  </PageTitleProvider>
+                </SidebarInset>
+              </SidebarProvider>
             </AuthProvider>
 
             <Toaster />
