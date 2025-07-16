@@ -22,6 +22,16 @@ export const sourceOfIncomeEnum = z.enum([
   "other",
 ] as const);
 
+export const statusLabels: Record<ApplicationStatus, string> = {
+  draft: "Draft",
+  submitted: "Submitted",
+  under_review: "Under Review",
+  approved: "Approved",
+  rejected: "Rejected",
+  escalated: "Escalated",
+  claimed: "Claimed",
+};
+
 export const kycStatusEnum = z.enum(["verified", "failed", "pending"] as const);
 export type KycStatus = z.infer<typeof kycStatusEnum>;
 export type ApplicationStatus = z.infer<typeof applicationStatusEnum>;

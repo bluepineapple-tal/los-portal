@@ -61,7 +61,7 @@ export function EditProductCategoryForm({
     const res = await fetch(
       `${API_BASE_URL}/product-categories/${category.id}`,
       {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       },

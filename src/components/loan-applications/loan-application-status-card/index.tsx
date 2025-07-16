@@ -15,7 +15,7 @@ interface Props {
   app: LoanApplicationDTO;
   creditScore?: number; // will be undefined until external check arrives
   kycStatus?: string;
-  rejectionNote?: string;
+  note?: string;
 }
 
 /* map BE → FE labels --------------------------------------------------- */
@@ -42,10 +42,12 @@ export function LoanApplicationStatusCard({
   app,
   creditScore,
   kycStatus,
-  rejectionNote,
+  note,
 }: Readonly<Props>) {
   const status = statusLabel(app.status);
   const offer = app.selectedOffer;
+  const showNote =
+    note && (app.status === "rejected" || app.status === "under_review");
 
   return (
     <Card className="w-full max-w-3xl space-y-6 rounded-2xl p-4 shadow-xl">
@@ -134,11 +136,7 @@ export function LoanApplicationStatusCard({
           </table>
         </section>
 
-        {status === "Rejected" && (
-          <p className="text-sm font-medium text-red-600">
-            Reason: {rejectionNote ?? "Unknown"}
-          </p>
-        )}
+        {showNote && <p className="text-sm font-medium text-red-600">{note}</p>}
       </CardContent>
 
       <CardFooter className="text-xs text-muted-foreground">

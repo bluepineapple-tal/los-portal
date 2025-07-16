@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LoanApplicationDTO } from "./loan-application.schema";
+import { LoanApplicationDTO, statusLabels } from "./loan-application.schema";
 import Link from "next/link";
 import { URLS } from "@/lib/constants";
 
@@ -44,7 +44,9 @@ export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
+      const status = row.original.status;
       let variant: BadgeProps["variant"] = "default";
+
       switch (row.original.status) {
         case "approved":
           variant = "success";
@@ -55,12 +57,6 @@ export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
         case "draft":
           variant = "secondary";
           break;
-        case "escalated":
-          variant = "default";
-          break;
-        case "submitted":
-          variant = "default";
-          break;
         case "under_review":
           variant = "outline";
           break;
@@ -70,7 +66,7 @@ export const loanApplicationTableColumns: ColumnDef<LoanApplicationDTO>[] = [
         default:
           break;
       }
-      return <Badge variant={variant}>{row.original.status}</Badge>;
+      return <Badge variant={variant}>{statusLabels[status] ?? status}</Badge>;
     },
   },
   {

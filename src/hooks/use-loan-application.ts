@@ -25,9 +25,14 @@ export function useLoanApplication(id: string) {
 
     socket.emit("subscribe-loan", id);
 
-    const onStatus = (evt: { applicationId: string; newStatus: string }) => {
+    const onStatus = (evt: {
+      applicationId: string;
+      newStatus: string;
+      note?: string;
+    }) => {
       if (evt.applicationId === id) {
         qc.invalidateQueries({ queryKey: ["loan-app", id] });
+        qc.invalidateQueries({ queryKey: ["loan-history-latest", id] });
       }
     };
 

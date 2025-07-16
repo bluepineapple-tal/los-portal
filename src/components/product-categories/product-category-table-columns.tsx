@@ -22,14 +22,7 @@ export const productCategoryTableColumns: ColumnDef<ProductCategoryDTO>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
-    cell: ({ row }) => (
-      <a
-        href={`/product-categories/${row.original.id}`}
-        className="hover:text-blue-500"
-      >
-        {row.original.name}
-      </a>
-    ),
+    cell: ({ row }) => row.original.name ?? "—",
   },
 
   /* description -------------------------------------------------- */

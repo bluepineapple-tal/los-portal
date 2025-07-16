@@ -34,6 +34,11 @@ export function CreateProductCategoryForm() {
   // Define the form.
   const form = useForm<z.infer<typeof createProductCategorySchema>>({
     resolver: zodResolver(createProductCategorySchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      status: "active",
+    },
   });
 
   async function onSubmit(values: z.infer<typeof createProductCategorySchema>) {
