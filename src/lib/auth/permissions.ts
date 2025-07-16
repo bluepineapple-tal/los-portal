@@ -95,5 +95,5 @@ export const RolePerms: Record<Role, Perm[]> = {
     Perm.EXTERNAL_VIEW,
     Perm.EXTERNAL_TRIGGER,
   ],
-  consumer: [Perm.LOAN_CREATE, Perm.LOAN_READ, Perm.LOAN_UPDATE],
+  consumer: [Perm.LOAN_CREATE, Perm.LOAN_READ],
 };
