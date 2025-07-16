@@ -3,7 +3,7 @@ export function CreditScoreMeter({ score }: Readonly<{ score: number }>) {
   const poor = score < 350;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <h3 className="text-lg font-semibold">Credit Score Meter</h3>
       <div className="relative h-4 w-full rounded-full bg-gray-200">
         <div

@@ -6,6 +6,13 @@ export const currency = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
+export function FormatNumber(n: number, digits = 0) {
+  return n.toLocaleString("en-IN", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+
 const statusStyles: Record<string, string> = {
   approved: "bg-green-200 text-green-800",
   rejected: "bg-red-200 text-red-800",
@@ -21,4 +28,15 @@ export function StatusBadge({ value }: Readonly<{ value: string }>) {
       {value.toUpperCase()}
     </Badge>
   );
+}
+
+export function VerdictBadge({ value }: Readonly<{ value: string }>) {
+  const map: Record<string, "success" | "destructive" | "outline"> = {
+    SUCCESS: "success",
+    APPROVE: "success",
+    VERIFIED: "success",
+    FAILED: "destructive",
+    REJECT: "destructive",
+  };
+  return <Badge variant={map[value] ?? "outline"}>{value}</Badge>;
 }

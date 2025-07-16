@@ -8,7 +8,12 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { LoanApplicationDTO } from "../loan-application.schema";
-import { currency, StatusBadge } from "./ui-snippets";
+import {
+  currency,
+  FormatNumber,
+  StatusBadge,
+  VerdictBadge,
+} from "./ui-snippets";
 import { CreditScoreMeter } from "./credit-score-meter";
 
 interface Props {
@@ -46,6 +51,28 @@ export function LoanApplicationStatusCard({
 }: Readonly<Props>) {
   const status = statusLabel(app.status);
   const offer = app.selectedOffer;
+
+  /* interest calc -------------------------------------------------- */
+  const loanAmount = Number(app.requested_amount);
+  const rateAnnual = Number(offer?.interest_rate ?? 0); // %
+  const tenure = Number(offer?.tenure_months ?? 1); // months
+  const fee = Number(offer?.processing_fee ?? 0);
+
+  const interestPerMonth = rateAnnual / 12;
+  const applicableInterest = interestPerMonth * tenure; // %
+  const interestAmt = loanAmount * (applicableInterest / 100);
+  const finalAmount = loanAmount + interestAmt + fee;
+  const emi = finalAmount / tenure;
+
+  /* AML quick verdict --------------------------------------------- */
+  const amlVerdict =
+    // @ts-expect-error unknown
+    app.externalChecks?.aml?.action_required ?? app.externalChecks?.aml?.status; // fallback
+  // @ts-expect-error unknown
+  const amlRisk = app.externalChecks?.aml?.risk_category;
+  const blockCls =
+    "rounded-xl border bg-white p-4 shadow-sm flex flex-col items-center text-center";
+
   const showNote =
     note && (app.status === "rejected" || app.status === "under_review");
 
@@ -83,12 +110,58 @@ export function LoanApplicationStatusCard({
                 </tr>
               </tbody>
             </table>
+
+            {/*interest breakdown ---------------------------------- */}
+            <details className="mt-4">
+              <summary className="cursor-pointer text-sm font-medium">
+                View interest calculation
+              </summary>
+              <table className="mt-2 w-full divide-y text-sm">
+                <thead className="sr-only">
+                  <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-1">Loan amount</td>
+                    <td>{currency.format(loanAmount)}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Processing fee</td>
+                    <td>{currency.format(fee)}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">
+                      Effective interest&nbsp;
+                      <span className="text-muted-foreground">
+                        ({FormatNumber(applicableInterest, 2)}%)
+                      </span>
+                    </td>
+                    <td>{currency.format(interestAmt)}</td>
+                  </tr>
+                  <tr className="font-semibold">
+                    <td className="py-1">Grand total</td>
+                    <td>{currency.format(finalAmount)}</td>
+                  </tr>
+                  <tr className="font-semibold">
+                    <td className="py-1">
+                      EMI&nbsp;
+                      <span className="text-muted-foreground">({tenure}×)</span>
+                    </td>
+                    <td>{currency.format(emi)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
           </section>
         )}
 
         {/* Credit / KYC panel ---------------------------------------- */}
-        <div className="flex flex-col gap-4 md:flex-row">
-          <div className="flex-1 rounded-xl border bg-white p-4 shadow-sm">
+        <div className="flex gap-4">
+          {/* Credit block grows to fill */}
+          <div className={`${blockCls} flex-1`}>
             <h3 className="mb-2 text-lg font-semibold">Credit score</h3>
             {creditScore ? (
               <CreditScoreMeter score={creditScore} />
@@ -96,10 +169,24 @@ export function LoanApplicationStatusCard({
               <p className="text-muted-foreground text-sm">Pending&nbsp;…</p>
             )}
           </div>
-
-          <div className="flex-1 rounded-xl border bg-white p-4 shadow-sm">
+          <div className={`${blockCls} flex-none`}>
             <h3 className="mb-2 text-lg font-semibold">KYC status</h3>
             <StatusBadge value={kycStatus ?? "pending"} />
+          </div>
+          <div className={`${blockCls} flex-none`}>
+            <h3 className="mb-2 text-lg font-semibold">AML status</h3>
+            {amlVerdict ? (
+              <div className="flex items-center gap-2">
+                <VerdictBadge value={amlVerdict} />
+                {amlRisk && (
+                  <span className="text-xs text-muted-foreground">
+                    ({amlRisk})
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm">Pending&nbsp;…</p>
+            )}
           </div>
         </div>
 
