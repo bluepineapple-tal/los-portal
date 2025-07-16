@@ -4,6 +4,7 @@ export const API_BASE_URL =
 export const URLS = {
   DASHBOARD: "/dashboard",
   LOAN_OFFERS: "/loan-offers",
+  CREATE_LOAN_OFFERS: "/loan-offers/create",
   LOAN_APPLICATIONS: "/loan-applications",
   CREATE_LOAN_APPLICATION: "/loan-applications/create",
   PRODUCT_CATEGORIES: "/product-categories",
