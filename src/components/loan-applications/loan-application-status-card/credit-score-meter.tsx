@@ -4,7 +4,7 @@ export function CreditScoreMeter({ score }: Readonly<{ score: number }>) {
 
   return (
     <div className="space-y-2 w-full">
-      <h3 className="text-lg font-semibold">Credit Score Meter</h3>
+      <h3 className="text-lg font-semibold">Credit Score</h3>
       <div className="relative h-4 w-full rounded-full bg-gray-200">
         <div
           className={`h-4 rounded-full absolute top-0 ${poor ? "bg-red-500" : "bg-blue-500"}`}
@@ -15,7 +15,7 @@ export function CreditScoreMeter({ score }: Readonly<{ score: number }>) {
           style={{ left: `calc(${pct}% - 8px)`, top: "20px" }}
         />
         <div className="absolute top-6 flex w-full justify-between text-xs font-medium">
-          <span>400</span>
+          <span>300</span>
           <span>900</span>
         </div>
       </div>

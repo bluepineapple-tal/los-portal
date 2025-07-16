@@ -20,11 +20,20 @@ const statusStyles: Record<string, string> = {
   claimed: "bg-blue-200 text-blue-800",
   verified: "bg-green-200 text-green-800",
   failed: "bg-red-200 text-red-800",
+  success: "bg-green-200 text-green-800",
 };
 
-export function StatusBadge({ value }: Readonly<{ value: string }>) {
+type StatusBadgeProps = {
+  value: string;
+};
+
+export function StatusBadge({ value }: StatusBadgeProps) {
+  const normalized = value.toLowerCase();
+
   return (
-    <Badge className={`px-4 py-1 text-sm ${statusStyles[value]}`}>
+    <Badge
+      className={`px-4 py-1 text-sm ${statusStyles[normalized] ?? "bg-gray-100 text-gray-800"}`}
+    >
       {value.toUpperCase()}
     </Badge>
   );

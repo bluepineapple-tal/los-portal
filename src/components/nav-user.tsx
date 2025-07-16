@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BellIcon,
-  CreditCardIcon,
+  // BellIcon,
+  // CreditCardIcon,
   LogOutIcon,
   MoreVerticalIcon,
   UserCircleIcon,
@@ -101,14 +101,14 @@ export function NavUser({
                 <UserCircleIcon size={18} />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
+              {/* <DropdownMenuItem className="gap-2">
                 <CreditCardIcon size={18} />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem className="gap-2">
                 <BellIcon size={18} />
                 Notifications
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2" onClick={handleLogout}>
