@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Session from "supertokens-auth-react/recipe/session";
 
 import { createUserSchema } from "@/components/onboarding/create-user.schema";
 import { Button } from "@/components/ui/button";
@@ -70,6 +71,7 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
         title: "Profile saved!",
         description: `${newUSer.first_name} ${newUSer.last_name}`,
       });
+      await Session.attemptRefreshingSession();
       router.replace("/"); // profileComplete flag has been flipped by backend
     } catch (err) {
       console.error(err);
