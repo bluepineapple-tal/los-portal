@@ -73,6 +73,7 @@ export function LoanApplicationStatusCard({
   const blockCls =
     "rounded-xl border bg-white p-4 shadow-sm flex flex-col items-center text-center";
 
+  const showClaim = app.status === "approved";
   const showNote =
     note && (app.status === "rejected" || app.status === "under_review");
 
@@ -228,12 +229,15 @@ export function LoanApplicationStatusCard({
         </section>
 
         {showNote && <p className="text-sm font-medium text-red-600">{note}</p>}
-        <button
-          type="button"
-          className="mt-2 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
-        >
-          Claim Now
-        </button>
+
+        {showClaim && (
+          <button
+            type="button"
+            className="mt-2 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+          >
+            Claim Now
+          </button>
+        )}
       </CardContent>
 
       <CardFooter className="flex flex-col items-stretch gap-2 text-xs text-muted-foreground">
