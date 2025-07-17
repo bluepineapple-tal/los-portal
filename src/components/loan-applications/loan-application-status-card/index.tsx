@@ -1,20 +1,25 @@
 "use client";
 
+import { DownloadIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardTitle,
   CardContent,
-  CardHeader,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import { downloadLoanPdf } from "@/lib/functions/loan-applications.api";
+
 import { LoanApplicationDTO } from "../loan-application.schema";
+import { CreditScoreMeter } from "./credit-score-meter";
 import {
   currency,
   FormatNumber,
   StatusBadge,
   VerdictBadge,
 } from "./ui-snippets";
-import { CreditScoreMeter } from "./credit-score-meter";
 
 interface Props {
   app: LoanApplicationDTO;
@@ -51,6 +56,7 @@ export function LoanApplicationStatusCard({
 }: Readonly<Props>) {
   const status = statusLabel(app.status);
   const offer = app.selectedOffer;
+  const id = app.id;
 
   /* interest calc -------------------------------------------------- */
   const loanAmount = Number(app.requested_amount);
@@ -73,7 +79,7 @@ export function LoanApplicationStatusCard({
   const blockCls =
     "rounded-xl border bg-white p-4 shadow-sm flex flex-col items-center text-center";
 
-  const showClaim = app.status === "approved";
+  const isApproved = app.status === "approved";
   const showNote =
     note && (app.status === "rejected" || app.status === "under_review");
 
@@ -81,7 +87,20 @@ export function LoanApplicationStatusCard({
     <Card className="w-full max-w-3xl space-y-6 rounded-2xl p-4 shadow-xl">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="text-2xl">Loan Summary</CardTitle>
-        <StatusBadge value={status.toLowerCase()} />
+
+        <div className="relative w-full text-center">
+          <StatusBadge value={status.toLowerCase()} />
+          {isApproved ? (
+            <Button
+              onClick={() => downloadLoanPdf(id)}
+              title="Download PDF"
+              variant={"outline"}
+              className="p-2 rounded hover:bg-gray-100 transition absolute right-0"
+            >
+              <DownloadIcon className="h-5 w-5 text-gray-600" />
+            </Button>
+          ) : null}
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -230,13 +249,10 @@ export function LoanApplicationStatusCard({
 
         {showNote && <p className="text-sm font-medium text-red-600">{note}</p>}
 
-        {showClaim && (
-          <button
-            type="button"
-            className="mt-2 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
-          >
+        {isApproved && (
+          <Button type="button" variant={"glow"} className="w-full" size={"lg"}>
             Claim Now
-          </button>
+          </Button>
         )}
       </CardContent>
 

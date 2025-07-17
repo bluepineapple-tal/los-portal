@@ -34,6 +34,25 @@ export async function getLoanApplication(
   );
 }
 
+export async function downloadLoanPdf(id: string) {
+  try {
+    const resp = await fetch(`${API_BASE_URL}/loan-applications/${id}/pdf`, {
+      credentials: "include",
+    });
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `loan-${id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 /**
  * Create a new loan application.
  *
