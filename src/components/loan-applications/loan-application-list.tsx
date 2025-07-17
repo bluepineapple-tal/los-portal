@@ -18,6 +18,7 @@ import { EditLoanApplicationForm } from "./edit-loan-application-form";
 import { loanApplicationTableColumns } from "./loan-application-table-columns";
 import { LoanApplicationDTO } from "./loan-application.schema";
 import { useSocket } from "@/hooks/use-socket";
+import { fetchApi } from "@/lib/fetch-api";
 
 export function LoanApplicationList() {
   const canEdit = useHasPerm(Perm.LOAN_UPDATE);
@@ -33,9 +34,10 @@ export function LoanApplicationList() {
   } = useQuery<LoanApplicationDTO[]>({
     queryKey: ["loan-apps"],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/loan-applications`);
-      if (!res.ok) throw new Error(res.statusText);
-      return res.json();
+      const res = await fetchApi<LoanApplicationDTO[]>(
+        `${API_BASE_URL}/loan-applications`,
+      );
+      return res;
     },
     refetchOnWindowFocus: false,
   });

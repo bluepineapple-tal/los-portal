@@ -14,6 +14,7 @@ import { API_BASE_URL } from "@/lib/constants";
 import { EditProductCategoryForm } from "./edit-product-category-form";
 import { productCategoryTableColumns } from "./product-category-table-columns";
 import { ProductCategoryDTO } from "./product-category.schema";
+import { fetchApi } from "@/lib/fetch-api";
 
 export function ProductCategoryList() {
   const [cats, setCats] = useState<ProductCategoryDTO[]>([]);
@@ -26,9 +27,10 @@ export function ProductCategoryList() {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/product-categories`);
-        if (!res.ok) throw new Error(res.statusText);
-        setCats(await res.json());
+        const res = await fetchApi<ProductCategoryDTO[]>(
+          `${API_BASE_URL}/product-categories`,
+        );
+        setCats(res);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Unknown error");
       } finally {

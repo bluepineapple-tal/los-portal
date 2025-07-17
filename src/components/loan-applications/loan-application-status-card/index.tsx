@@ -193,7 +193,6 @@ export function LoanApplicationStatusCard({
             )}
           </div>
         </div>
-        <div></div>
 
         {/* Applicant -------------------------------------------------- */}
         <section className="rounded-xl border bg-white p-4 shadow-sm">

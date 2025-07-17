@@ -16,6 +16,7 @@ export async function fetchApi<T>(
 
   const mergedOptions: RequestInit = {
     method: options.method ?? "GET",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       // Authorization: `Bearer ${accessToken}`, // If needed

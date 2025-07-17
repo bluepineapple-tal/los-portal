@@ -29,6 +29,7 @@ import {
 } from "../ui/select";
 import { createProductModelSchema } from "./create-product-model.schema";
 import { IProductMake, ProductStatus } from "./product.interface";
+import { fetchApi } from "@/lib/fetch-api";
 
 export function CreateProductModelForm() {
   const [makes, setMakes] = useState<IProductMake[]>([]);
@@ -38,8 +39,9 @@ export function CreateProductModelForm() {
   useEffect(() => {
     async function fetchMakes() {
       try {
-        const response = await fetch(`${API_BASE_URL}/product-make`);
-        const data = await response.json();
+        const data = await fetchApi<IProductMake[]>(
+          `${API_BASE_URL}/product-make`,
+        );
         setMakes(data);
       } catch (error) {
         console.error("Error fetching product makes:", error);

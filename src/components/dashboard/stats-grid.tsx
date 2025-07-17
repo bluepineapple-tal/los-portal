@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchApi } from "@/lib/fetch-api";
 
 import { StatsCard, StatsCardProps } from "./stats-card";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export function StatsGrid() {
   const [cards, setCards] = useState<StatsCardProps[]>([]);
@@ -31,9 +32,8 @@ export function StatsGrid() {
       if (session.loading) return;
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/dashboard/${role}`).then((r) =>
-          r.json(),
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res = await fetchApi<any>(`${API_BASE_URL}/dashboard/${role}`);
 
         switch (role) {
           case "admin":

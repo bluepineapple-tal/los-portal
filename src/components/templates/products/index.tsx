@@ -9,6 +9,7 @@ import { IProductMake } from "@/components/products/product.interface";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchApi } from "@/lib/fetch-api";
 
 export const ProductPageTemplate = () => {
   const session = useSessionContext();
@@ -23,11 +24,10 @@ export const ProductPageTemplate = () => {
     const fetchMakes = async () => {
       try {
         setLoadingMakes(true);
-        const response = await fetch(`${API_BASE_URL}/product-make`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch makes: ${response.statusText}`);
-        }
-        const data = (await response.json()) as IProductMake[];
+        const data = await fetchApi<IProductMake[]>(
+          `${API_BASE_URL}/product-make`,
+        );
+
         setMakes(data);
       } catch (error) {
         setErrorMakes(error instanceof Error ? error.message : "Unknown error");

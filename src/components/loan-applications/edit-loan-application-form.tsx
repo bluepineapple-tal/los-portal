@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchApi } from "@/lib/fetch-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -43,12 +44,14 @@ export function EditLoanApplicationForm({
   });
 
   async function submit(values: { status: LoanApplicationDTO["status"] }) {
-    const res = await fetch(`${API_BASE_URL}/loan-applications/${app.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const updated: LoanApplicationDTO = await res.json();
+    const updated = await fetchApi<LoanApplicationDTO>(
+      `${API_BASE_URL}/loan-applications/${app.id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      },
+    );
     onSuccess(updated);
   }
 

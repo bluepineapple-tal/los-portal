@@ -26,6 +26,7 @@ import {
   productCategorySchema,
   productCategoryStatusEnum,
 } from "./product-category.schema";
+import { fetchApi } from "@/lib/fetch-api";
 
 type Props = {
   category: ProductCategoryDTO;
@@ -58,7 +59,7 @@ export function EditProductCategoryForm({
   async function submit(
     values: Pick<ProductCategoryDTO, "name" | "description" | "status">,
   ) {
-    const res = await fetch(
+    const updated = await fetchApi<ProductCategoryDTO>(
       `${API_BASE_URL}/product-categories/${category.id}`,
       {
         method: "PUT",
@@ -66,7 +67,6 @@ export function EditProductCategoryForm({
         body: JSON.stringify(values),
       },
     );
-    const updated: ProductCategoryDTO = await res.json();
     onSuccess(updated);
   }
 

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { Perm } from "@/lib/auth/permissions";
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchApi } from "@/lib/fetch-api";
 
 import { useHasPerm } from "../contexts/authz-provider";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
@@ -28,15 +29,9 @@ export function LoanOfferList() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${API_BASE_URL}/loan-offers/`);
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch loan offers: ${response.statusText}`,
-          );
-        }
-
-        const data = (await response.json()) as LoanOfferDTO[];
+        const data = await fetchApi<LoanOfferDTO[]>(
+          `${API_BASE_URL}/loan-offers/`,
+        );
         setOffers(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

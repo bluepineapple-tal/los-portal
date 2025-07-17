@@ -27,7 +27,7 @@ type StatusBadgeProps = {
   value: string;
 };
 
-export function StatusBadge({ value }: StatusBadgeProps) {
+export function StatusBadge({ value }: Readonly<StatusBadgeProps>) {
   const normalized = value.toLowerCase();
 
   return (

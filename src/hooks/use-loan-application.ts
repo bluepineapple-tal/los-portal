@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { LoanApplicationDTO } from "@/components/loan-applications/loan-application.schema";
 import { useSocket } from "@/hooks/use-socket";
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchApi } from "@/lib/fetch-api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useLoanApplication(id: string) {
@@ -15,7 +16,7 @@ export function useLoanApplication(id: string) {
   const query = useQuery<LoanApplicationDTO>({
     queryKey: ["loan-app", id],
     queryFn: () =>
-      fetch(`${API_BASE_URL}/loan-applications/${id}`).then((r) => r.json()),
+      fetchApi<LoanApplicationDTO>(`${API_BASE_URL}/loan-applications/${id}`),
     refetchOnWindowFocus: false,
   });
 
