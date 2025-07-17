@@ -16,7 +16,7 @@ export default function CreateLoanOffer() {
       <div className="max-w-screen-md mx-auto flex gap-4">
         <Card
           className={cn(
-            "w-full h-32 flex justify-center items-center transition-all bg-primary text-primary-foreground",
+            "w-full h-32 flex justify-center items-center transition-all text-foreground",
           )}
           // onClick={() => setSelectedTab("create-loan")}
         >

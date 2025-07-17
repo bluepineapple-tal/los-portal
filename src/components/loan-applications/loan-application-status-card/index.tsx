@@ -79,7 +79,7 @@ export function LoanApplicationStatusCard({
   return (
     <Card className="w-full max-w-3xl space-y-6 rounded-2xl p-4 shadow-xl">
       <CardHeader className="flex items-center justify-between">
-        <CardTitle className="text-2xl">Loan summary</CardTitle>
+        <CardTitle className="text-2xl">Loan Summary</CardTitle>
         <StatusBadge value={status.toLowerCase()} />
       </CardHeader>
 
@@ -107,6 +107,10 @@ export function LoanApplicationStatusCard({
                 <tr>
                   <td className="py-1 font-medium">Tenure</td>
                   <td>{offer.tenure_months} months</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">EMI</td>
+                  <td className="font-semibold">{currency.format(emi)}</td>
                 </tr>
               </tbody>
             </table>
@@ -162,7 +166,7 @@ export function LoanApplicationStatusCard({
         <div className="flex gap-4">
           {/* Credit block grows to fill */}
           <div className={`${blockCls} flex-1`}>
-            <h3 className="mb-2 text-lg font-semibold">Credit score</h3>
+            {/* <h3 className="mb-2 text-lg font-semibold">Credit score</h3> */}
             {creditScore ? (
               <CreditScoreMeter score={creditScore} />
             ) : (
@@ -189,6 +193,7 @@ export function LoanApplicationStatusCard({
             )}
           </div>
         </div>
+        <div></div>
 
         {/* Applicant -------------------------------------------------- */}
         <section className="rounded-xl border bg-white p-4 shadow-sm">
@@ -224,11 +229,22 @@ export function LoanApplicationStatusCard({
         </section>
 
         {showNote && <p className="text-sm font-medium text-red-600">{note}</p>}
+        <button
+          type="button"
+          className="mt-2 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+        >
+          Claim Now
+        </button>
       </CardContent>
 
-      <CardFooter className="text-xs text-muted-foreground">
-        Updated&nbsp;
-        {new Date(app.updated_at).toLocaleString()}
+      <CardFooter className="flex flex-col items-stretch gap-2 text-xs text-muted-foreground">
+        <span>
+          Updated&nbsp;
+          {new Date(app.updated_at).toLocaleString()}
+        </span>
+        <p className="text-[11px] text-gray-500 italic">
+          Disclaimer: This is a placeholder disclaimer.
+        </p>
       </CardFooter>
     </Card>
   );

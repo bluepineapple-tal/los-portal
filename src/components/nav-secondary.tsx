@@ -6,13 +6,13 @@ import { LucideIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  // SidebarMenu,
+  // SidebarMenuButton,
+  // SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 export function NavSecondary({
-  items,
+  // items,
   ...props
 }: {
   items: {
@@ -24,7 +24,7 @@ export function NavSecondary({
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
-        <SidebarMenu>
+        {/* <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
@@ -35,7 +35,7 @@ export function NavSecondary({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
-        </SidebarMenu>
+        </SidebarMenu> */}
       </SidebarGroupContent>
     </SidebarGroup>
   );
