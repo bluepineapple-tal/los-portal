@@ -1,18 +1,28 @@
 "use client";
 
-import { DownloadIcon } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card";
-import { downloadLoanPdf } from "@/lib/functions/loan-applications.api";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { DownloadIcon, Clock } from "lucide-react";
 
-import { LoanApplicationDTO } from "../loan-application.schema";
 import { CreditScoreMeter } from "./credit-score-meter";
 import {
   currency,
@@ -21,31 +31,39 @@ import {
   VerdictBadge,
 } from "./ui-snippets";
 
+import { LoanApplicationDTO } from "../loan-application.schema";
+import { downloadLoanPdf } from "@/lib/functions/loan-applications.api";
+
+/* helper -------------------------------------------------------------- */
+const FieldRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) => (
+  <tr className="border-t">
+    <td className="py-1 pr-3 text-sm text-muted-foreground">{label}</td>
+    <td className="py-1 text-right font-medium">{value}</td>
+  </tr>
+);
+
+const readableStatus: Record<LoanApplicationDTO["status"], string> = {
+  draft: "Draft",
+  submitted: "Submitted",
+  under_review: "Under review",
+  approved: "Approved",
+  rejected: "Rejected",
+  escalated: "Escalated",
+  claimed: "Claimed",
+};
+
+/* -------------------------------------------------------------------- */
 interface Props {
   app: LoanApplicationDTO;
-  creditScore?: number; // will be undefined until external check arrives
+  creditScore?: number;
   kycStatus?: string;
   note?: string;
-}
-
-/* map BE → FE labels --------------------------------------------------- */
-function statusLabel(s: string) {
-  switch (s) {
-    case "draft":
-      return "Draft";
-    case "submitted":
-      return "Submitted";
-    case "under_review":
-      return "Under review";
-    case "approved":
-      return "Approved";
-    case "rejected":
-      return "Rejected";
-    case "escalated":
-      return "Escalated";
-    default:
-      return s;
-  }
 }
 
 export function LoanApplicationStatusCard({
@@ -54,215 +72,193 @@ export function LoanApplicationStatusCard({
   kycStatus,
   note,
 }: Readonly<Props>) {
-  const status = statusLabel(app.status);
-  const offer = app.selectedOffer;
-  const id = app.id;
+  const { id, status: rawStatus, selectedOffer: offer } = app;
+  const status = readableStatus[rawStatus];
 
-  /* interest calc -------------------------------------------------- */
-  const loanAmount = Number(app.requested_amount);
-  const rateAnnual = Number(offer?.interest_rate ?? 0); // %
-  const tenure = Number(offer?.tenure_months ?? 1); // months
+  /* ---- quick maths ------------------------------------------------ */
+  const P = Number(app.requested_amount);
+  const rA = Number(offer?.interest_rate ?? 0);
+  const m = Number(offer?.tenure_months ?? 1);
   const fee = Number(offer?.processing_fee ?? 0);
 
-  const interestPerMonth = rateAnnual / 12;
-  const applicableInterest = interestPerMonth * tenure; // %
-  const interestAmt = loanAmount * (applicableInterest / 100);
-  const finalAmount = loanAmount + interestAmt + fee;
-  const emi = finalAmount / tenure;
+  const intAmt = P * (rA / 100) * (m / 12);
+  const total = P + intAmt + fee;
+  const emi = total / m;
 
-  /* AML quick verdict --------------------------------------------- */
-  const amlVerdict =
-    // @ts-expect-error unknown
-    app.externalChecks?.aml?.action_required ?? app.externalChecks?.aml?.status; // fallback
-  // @ts-expect-error unknown
-  const amlRisk = app.externalChecks?.aml?.risk_category;
+  // external checks
+  const aml = app.externalChecks?.aml;
+  // @ts-expect-error runtime shape
+  const amlVerdict = aml?.action_required ?? aml?.status;
+  // @ts-expect-error runtime shape
+  const amlRisk = aml?.risk_category;
   const blockCls =
     "rounded-xl border bg-white p-4 shadow-sm flex flex-col items-center text-center";
+  const isApproved = rawStatus === "approved";
+  const showNote = note && ["rejected", "under_review"].includes(rawStatus);
 
-  const isApproved = app.status === "approved";
-  const showNote =
-    note && (app.status === "rejected" || app.status === "under_review");
-
+  /* ----------------------------------------------------------------- */
   return (
-    <Card className="w-full max-w-3xl space-y-6 rounded-2xl p-4 shadow-xl">
-      <CardHeader className="flex items-center justify-between">
-        <CardTitle className="text-2xl">Loan Summary</CardTitle>
-
-        <div className="relative w-full text-center">
-          <StatusBadge value={status.toLowerCase()} />
-          {isApproved ? (
-            <Button
-              onClick={() => downloadLoanPdf(id)}
-              title="Download PDF"
-              variant={"outline"}
-              className="p-2 rounded hover:bg-gray-100 transition absolute right-0"
-            >
-              <DownloadIcon className="h-5 w-5 text-gray-600" />
-            </Button>
-          ) : null}
+    <Card className="mx-auto w-full max-w-3xl shadow-lg">
+      {/* ------------------------ header */}
+      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <CardTitle>Loan Summary</CardTitle>
+          <CardDescription className="space-x-2">
+            <StatusBadge value={status.toLowerCase()} />
+            <span className="text-xs text-muted-foreground">
+              #{id.slice(0, 8)}
+            </span>
+          </CardDescription>
         </div>
+
+        {isApproved && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="outline"
+                className="border-dashed hover:bg-muted"
+                onClick={() => downloadLoanPdf(id)}
+              >
+                <DownloadIcon className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Download application PDF</TooltipContent>
+          </Tooltip>
+        )}
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        {/* Loan details ------------------------------------------------ */}
+      <Separator />
+
+      {/* ------------------------ content */}
+      <CardContent className="space-y-8">
+        {/* Loan & product */}
         {offer && (
-          <section className="rounded-xl border bg-white p-4 shadow-sm">
-            <h3 className="mb-2 text-lg font-semibold">Loan details</h3>
-            <table className="w-full divide-y text-sm">
-              <thead className="sr-only">
-                <tr>
-                  <th>Field</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
+          <section className="space-y-4">
+            <h3 className="text-lg font-semibold">Loan details</h3>
+            <table className="w-full text-sm">
               <tbody>
-                <tr>
-                  <td className="py-1 font-medium">Amount</td>
-                  <td>{currency.format(app.requested_amount)}</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Interest rate</td>
-                  <td>{offer.interest_rate}%</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Tenure</td>
-                  <td>{offer.tenure_months} months</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">EMI</td>
-                  <td className="font-semibold">{currency.format(emi)}</td>
-                </tr>
+                <FieldRow label="Amount" value={currency.format(P)} />
+                <FieldRow
+                  label="Interest rate"
+                  value={`${offer.interest_rate}% p.a.`}
+                />
+                <FieldRow
+                  label="Tenure"
+                  value={`${offer.tenure_months} months`}
+                />
+                <FieldRow label="EMI" value={currency.format(emi)} />
               </tbody>
             </table>
 
-            {/*interest breakdown ---------------------------------- */}
-            <details className="mt-4">
-              <summary className="cursor-pointer text-sm font-medium">
-                View interest calculation
-              </summary>
-              <table className="mt-2 w-full divide-y text-sm">
-                <thead className="sr-only">
-                  <tr>
-                    <th>Field</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="py-1">Loan amount</td>
-                    <td>{currency.format(loanAmount)}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1">Processing fee</td>
-                    <td>{currency.format(fee)}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1">
-                      Effective interest&nbsp;
-                      <span className="text-muted-foreground">
-                        ({FormatNumber(applicableInterest, 2)}%)
-                      </span>
-                    </td>
-                    <td>{currency.format(interestAmt)}</td>
-                  </tr>
-                  <tr className="font-semibold">
-                    <td className="py-1">Grand total</td>
-                    <td>{currency.format(finalAmount)}</td>
-                  </tr>
-                  <tr className="font-semibold">
-                    <td className="py-1">
-                      EMI&nbsp;
-                      <span className="text-muted-foreground">({tenure}×)</span>
-                    </td>
-                    <td>{currency.format(emi)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </details>
+            {/* interest accordion */}
+            <Accordion type="single" collapsible>
+              <AccordionItem value="calc">
+                <AccordionTrigger className="justify-start text-sm">
+                  Interest calculation
+                </AccordionTrigger>
+                <AccordionContent>
+                  <table className="w-full text-sm">
+                    <tbody>
+                      <FieldRow
+                        label="Loan amount"
+                        value={currency.format(P)}
+                      />
+                      <FieldRow
+                        label="Processing fee"
+                        value={currency.format(fee)}
+                      />
+                      <FieldRow
+                        label={`Interest (${FormatNumber(
+                          (rA * m) / 12,
+                          2,
+                        )} %)`} /* effective */
+                        value={currency.format(intAmt)}
+                      />
+                      <FieldRow
+                        label="Total repayable"
+                        value={currency.format(total)}
+                      />
+                    </tbody>
+                  </table>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </section>
         )}
 
-        {/* Credit / KYC panel ---------------------------------------- */}
+        {/* Credit – KYC – AML */}
         <div className="flex gap-4">
-          {/* Credit block grows to fill */}
-          <div className={`${blockCls} flex-1`}>
-            {/* <h3 className="mb-2 text-lg font-semibold">Credit score</h3> */}
+          <Card className={`${blockCls} flex-1`}>
             {creditScore ? (
               <CreditScoreMeter score={creditScore} />
             ) : (
-              <p className="text-muted-foreground text-sm">Pending&nbsp;…</p>
+              <Clock className="h-6 w-6 text-muted-foreground" />
             )}
-          </div>
-          <div className={`${blockCls} flex-none`}>
-            <h3 className="mb-2 text-lg font-semibold">KYC status</h3>
+          </Card>
+
+          <Card className="flex flex-col items-center justify-start gap-3 p-4 px-6 shadow-sm flex-none">
+            <h4 className="text-sm font-medium">KYC status</h4>
             <StatusBadge value={kycStatus ?? "pending"} />
-          </div>
-          <div className={`${blockCls} flex-none`}>
-            <h3 className="mb-2 text-lg font-semibold">AML status</h3>
+          </Card>
+
+          <Card className="flex flex-col items-center justify-start gap-3 py-4 px-6 shadow-sm flex-none">
+            <h4 className="text-sm font-medium">AML status</h4>
             {amlVerdict ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col items-center gap-2">
                 <VerdictBadge value={amlVerdict} />
                 {amlRisk && (
-                  <span className="text-xs text-muted-foreground">
-                    ({amlRisk})
-                  </span>
+                  <p className="text-xs text-muted-foreground">({amlRisk})</p>
                 )}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">Pending&nbsp;…</p>
+              <Clock className="h-6 w-6 text-muted-foreground" />
             )}
-          </div>
+          </Card>
         </div>
 
-        {/* Applicant -------------------------------------------------- */}
-        <section className="rounded-xl border bg-white p-4 shadow-sm">
-          <h3 className="mb-2 text-lg font-semibold">Applicant details</h3>
-          <table className="w-full divide-y text-sm">
-            <thead className="sr-only">
-              <tr>
-                <th>Field</th>
-                <th>Value</th>
-              </tr>
-            </thead>
+        {/* Applicant */}
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold">Applicant</h3>
+          <table className="w-full text-sm">
             <tbody>
-              <tr>
-                <td className="py-1 font-medium">Name</td>
-                <td>
-                  {app.consumer.user.first_name} {app.consumer.user.last_name}
-                </td>
-              </tr>
-              <tr>
-                <td className="py-1 font-medium">PAN</td>
-                <td>{app.consumer.pan_number}</td>
-              </tr>
-              <tr>
-                <td className="py-1 font-medium">Phone</td>
-                <td>{app.consumer.user.phone}</td>
-              </tr>
-              <tr>
-                <td className="py-1 font-medium">Monthly income</td>
-                <td>{currency.format(app.monthly_income)}</td>
-              </tr>
+              <FieldRow
+                label="Name"
+                value={`${app.consumer.user.first_name} ${app.consumer.user.last_name}`}
+              />
+              <FieldRow label="PAN" value={app.consumer.pan_number} />
+              <FieldRow label="Phone" value={app.consumer.user.phone} />
+              <FieldRow
+                label="Monthly income"
+                value={currency.format(app.monthly_income)}
+              />
             </tbody>
           </table>
         </section>
 
-        {showNote && <p className="text-sm font-medium text-red-600">{note}</p>}
+        {/* note / manual-review reason */}
+        {showNote && (
+          <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+            {note}
+          </p>
+        )}
 
+        {/* CTA */}
         {isApproved && (
-          <Button type="button" variant={"glow"} className="w-full" size={"lg"}>
+          <Button size="lg" variant="glow" className="w-full">
             Claim Now
           </Button>
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-col items-stretch gap-2 text-xs text-muted-foreground">
-        <span>
-          Updated&nbsp;
-          {new Date(app.updated_at).toLocaleString()}
-        </span>
-        <p className="text-[11px] text-gray-500 italic">
-          Disclaimer: This is a placeholder disclaimer.
+      {/* ------------------------ footer */}
+      <CardFooter className="flex flex-col items-start space-y-1">
+        <time className="text-xs text-muted-foreground">
+          Updated&nbsp;{new Date(app.updated_at).toLocaleString()}
+        </time>
+        <p className="text-[11px] italic text-muted-foreground">
+          Disclaimer: This document is for illustrative purposes only and does
+          not constitute a legal commitment.
         </p>
       </CardFooter>
     </Card>

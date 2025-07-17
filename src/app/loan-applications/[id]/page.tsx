@@ -36,7 +36,7 @@ export default function LoanApplicationDetails() {
         <LoanApplicationStatusCard
           app={app}
           creditScore={app.externalChecks?.credit?.credit_score}
-          kycStatus={app.externalChecks?.kyc?.status}
+          kycStatus={app.externalChecks?.kyc?.status?.toLowerCase()}
           note={note}
         />
       </div>
