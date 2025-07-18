@@ -1,8 +1,6 @@
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
-import { DataTable } from "@/components/data-table";
-
-import data from "./data.json";
+import { LoanApplicationList } from "@/components/loan-applications/loan-application-list";
 
 export default function Page() {
   return (
@@ -14,7 +12,14 @@ export default function Page() {
           <div className="px-4 lg:px-6">
             <ChartAreaInteractive />
           </div>
-          <DataTable data={data} />
+          <div className="px-4 lg:px-6">
+            <div className="text-2xl scroll-m-20 pb-2 font-semibold tracking-tight first:mt-0">
+              Recent Loan Applications
+            </div>
+            <LoanApplicationList />
+          </div>
+
+          {/* <DataTable data={data} /> */}
         </div>
       </div>
     </div>

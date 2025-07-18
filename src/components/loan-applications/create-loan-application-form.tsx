@@ -69,6 +69,7 @@ export function CreateLoanApplicationForm({
     defaultValues: {
       monthly_income: 0,
       requested_amount: 0,
+      consent: true,
     },
   });
 
@@ -310,9 +311,39 @@ export function CreateLoanApplicationForm({
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name="consent"
+          render={({ field }) => (
+            <FormItem className="flex items-start space-x-2">
+              <FormControl>
+                <input
+                  type="checkbox"
+                  id="consentCheckbox"
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  className="mt-1"
+                />
+              </FormControl>
+              <FormLabel
+                htmlFor="consentCheckbox"
+                className="text-sm font-normal"
+              >
+                I hereby authorize the lender to conduct Know Your Customer
+                (KYC) and Anti-Money Laundering (AML) checks, and to obtain my
+                credit report and credit score from authorized credit bureaus as
+                part of the loan application process.
+              </FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {/* ------------------------- SUBMIT ------------------------------ */}
-        <Button type="submit" className="mt-6">
+        <Button
+          type="submit"
+          className="mt-6"
+          disabled={!form.watch("consent")}
+        >
           Submit Application
         </Button>
       </form>
