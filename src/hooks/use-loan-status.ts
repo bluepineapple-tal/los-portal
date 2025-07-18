@@ -10,6 +10,8 @@ export function useLoanStatus(appId: string, initial: ApplicationStatus) {
   const socket = useSocket();
 
   useEffect(() => {
+    if (!socket) return;
+
     socket.emit("subscribe-loan", appId);
 
     socket.on("loan-status", (evt) => {
