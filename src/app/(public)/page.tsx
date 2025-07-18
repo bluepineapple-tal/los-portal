@@ -20,7 +20,7 @@ export default function HomePage() {
 
       {/* Main Content */}
       <section
-        className="flex flex-col items-center justify-center flex-1 px-4 py-10 space-y-8"
+        className="flex flex-col items-center justify-left flex-1 px-4 py-10 space-y-8"
         style={{
           backgroundImage: "url('')",
         }}
@@ -28,7 +28,6 @@ export default function HomePage() {
         <h2 className="text-3xl font-semibold text-center text-gray-800">
           Welcome to Consumer Loan Origination System
         </h2>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
           {[
             {
@@ -55,6 +54,9 @@ export default function HomePage() {
             </Card>
           ))}
         </div>
+        <Link href="/loan-applications/create">
+          <Button variant="default">Apply Now</Button>
+        </Link>
       </section>
 
       {/* Footer */}

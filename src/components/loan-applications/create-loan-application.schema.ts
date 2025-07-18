@@ -23,6 +23,11 @@ export const createLoanApplicationSchema = z.object({
   /* optional status / date (leave blank, BE will fill) ----------- */
   application_date: z.date().optional(),
   status: applicationStatusEnum.optional(),
+  consent: z.literal(true, {
+    errorMap: () => ({
+      message: "You must give consent to proceed.",
+    }),
+  }),
 });
 
 export type ICreateLoanApplication = z.infer<
