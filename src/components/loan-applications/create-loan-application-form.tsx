@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -75,6 +75,30 @@ export function CreateLoanApplicationForm({
 
   const requestedAmount = form.watch("requested_amount") ?? 0;
 
+  /** Only keep offers that:
+   *  1. are active,
+   *  2. match the requested_amount, and
+   *  3. are currently within their valid_from / valid_to window.
+   */
+  const validOffers = useMemo(() => {
+    const today = new Date();
+
+    return offers.filter((o) => {
+      if (!o.is_active) return false;
+
+      // -- amount within [min, max] --------------------------------------
+      const amt = requestedAmount;
+      const min = Number(o.min_amount);
+      const max = Number(o.max_amount);
+      if (amt < min || amt > max) return false;
+
+      // -- date within [valid_from, valid_to] ----------------------------
+      const from = new Date(o.valid_from); // works for ISO strings
+      const to = new Date(o.valid_to);
+      return today >= from && today <= to;
+    });
+  }, [offers, requestedAmount]);
+
   /* submit -------------------------------------------------------- */
   const onSubmit = async (values: ICreateLoanApplication) => {
     if (!user?.consumerProfile?.id) {
@@ -100,13 +124,6 @@ export function CreateLoanApplicationForm({
   if (!user?.consumerProfile) return null;
 
   const cp = user.consumerProfile; // shorthand
-
-  const validOffers = offers.filter((o) => {
-    if (!o.is_active) return false;
-    const min = parseFloat(o.min_amount);
-    const max = parseFloat(o.max_amount);
-    return requestedAmount >= min && requestedAmount <= max;
-  });
 
   /* ------------------------------ UI --------------------------------- */
   return (

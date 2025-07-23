@@ -30,7 +30,7 @@ export const NAV_MAIN: NavItem[] = [
     title: "Create Loan Offer",
     url: URLS.CREATE_LOAN_OFFERS,
     icon: PlusCircleIcon,
-    roles: ["consumer"],
+    roles: ["super-admin", "admin"],
   },
   {
     title: "Loan Offers",

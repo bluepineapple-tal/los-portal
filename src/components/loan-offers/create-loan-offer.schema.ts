@@ -41,11 +41,11 @@ export const createLoanOfferSchema = z
       .nonnegative({ message: "Minimum must be a positive number" }),
 
     valid_from: z.date({
-      required_error: "A date of birth is required.",
+      required_error: "Valid from date is requried.",
     }),
 
     valid_to: z.date({
-      required_error: "A date of birth is required.",
+      required_error: "Valid to date is required.",
     }),
 
     // Processing fee (can be zero or more, e.g., 999.99)
@@ -73,7 +73,7 @@ export const createLoanOfferSchema = z
   // FIXME: Remove this error if the loan offer form is fixed
   .refine((data) => data.valid_from <= data.valid_to, {
     message: "Valid from date cannot be greater than valid to",
-    path: ["min_amount"], // or use ["max_amount"] depending on where you want the error
+    path: ["valid_from"],
   });
 
 /** Convenience TypeScript type */

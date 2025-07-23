@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
+import { redirectToAuth } from "supertokens-auth-react";
+import { signOut } from "supertokens-auth-react/recipe/session";
 import { z } from "zod";
-import Session from "supertokens-auth-react/recipe/session";
 
 import { createUserSchema } from "@/components/onboarding/create-user.schema";
 import { Button } from "@/components/ui/button";
@@ -37,7 +36,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const CreateUserForm = ({ userId }: { userId: string }) => {
   const { toast } = useToast();
-  const router = useRouter();
 
   /* ------------------------ RHF setup ----------------------------- */
   const form = useForm<z.infer<typeof createUserSchema>>({
@@ -71,8 +69,8 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
         title: "Profile saved!",
         description: `${newUSer.first_name} ${newUSer.last_name}`,
       });
-      await Session.attemptRefreshingSession();
-      router.replace("/"); // profileComplete flag has been flipped by backend
+      await signOut(); // invalidate tokens + cookies :contentReference[oaicite:0]{index=0}
+      redirectToAuth({ redirectBack: false }); // show the login screen
     } catch (err) {
       console.error(err);
       toast({

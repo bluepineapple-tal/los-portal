@@ -218,6 +218,7 @@ export function EditLoanOfferForm({
                   <FormLabel>
                     {fieldName === "valid_from" ? "Valid From" : "Valid To"} *
                   </FormLabel>
+
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -237,7 +238,12 @@ export function EditLoanOfferForm({
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+
+                    <PopoverContent
+                      className="w-auto p-0"
+                      align="start"
+                      autoFocus={false}
+                    >
                       <Calendar
                         mode="single"
                         selected={field.value}
@@ -250,6 +256,7 @@ export function EditLoanOfferForm({
                       />
                     </PopoverContent>
                   </Popover>
+
                   <FormMessage />
                 </FormItem>
               )}

@@ -25,7 +25,7 @@ export const UsersPageTemplate: FC<Props> = ({ users }) => {
   return (
     <RequirePerm perms={[Perm.AUTH_READ]}>
       <div className="p-6">
-        <h1 className="mb-4 text-xl font-bold">Loan Offers</h1>
+        <h1 className="mb-4 text-xl font-bold">Users</h1>
 
         <UserList users={users} />
       </div>

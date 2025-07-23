@@ -57,7 +57,11 @@ export function LoanOfferList() {
       />
 
       {canEdit && (
-        <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <Sheet
+          open={!!editing}
+          onOpenChange={(o) => !o && setEditing(null)}
+          modal={false}
+        >
           <SheetContent side="right" className="flex flex-col gap-6">
             {editing && (
               <>
