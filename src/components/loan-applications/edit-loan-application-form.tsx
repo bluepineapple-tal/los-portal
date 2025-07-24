@@ -53,6 +53,7 @@ export function EditLoanApplicationForm({
       },
     );
     onSuccess(updated);
+    form.reset({ status: updated.status });
   }
 
   return (

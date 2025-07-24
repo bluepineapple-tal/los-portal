@@ -72,6 +72,7 @@ export function CreateProductModelForm() {
         title: "Product Model created successfully",
         description: newModel.name,
       });
+      form.reset();
     } catch (error) {
       console.error("error: ", error);
       toast({

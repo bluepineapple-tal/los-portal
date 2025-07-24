@@ -119,6 +119,7 @@ export function CreateLoanApplicationForm({
     });
 
     router.replace(`${URLS.LOAN_APPLICATIONS}/${response.id}`);
+    form.reset();
   };
 
   if (!user?.consumerProfile) return null;

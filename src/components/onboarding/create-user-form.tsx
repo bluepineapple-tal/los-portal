@@ -69,6 +69,7 @@ const CreateUserForm = ({ userId }: { userId: string }) => {
         title: "Profile saved!",
         description: `${newUSer.first_name} ${newUSer.last_name}`,
       });
+      form.reset();
       await signOut(); // invalidate tokens + cookies :contentReference[oaicite:0]{index=0}
       redirectToAuth({ redirectBack: false }); // show the login screen
     } catch (err) {

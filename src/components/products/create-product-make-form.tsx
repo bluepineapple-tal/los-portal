@@ -50,6 +50,7 @@ export function CreateProductMakeForm() {
         title: "Product Make created successfully",
         description: newMake.name,
       });
+      form.reset();
       // Optionally, navigate somewhere or show a success message
     } catch (error) {
       toast({

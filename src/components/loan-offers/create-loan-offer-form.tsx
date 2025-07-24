@@ -60,6 +60,7 @@ export function CreateLoanOfferForm() {
         title: "Loan Offer created successfully",
         description: newLoanOffer.offer_name,
       });
+      form.reset();
     } catch (error) {
       console.error("error: ", error);
       toast({
