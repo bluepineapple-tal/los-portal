@@ -44,7 +44,7 @@ export function ChartAreaInteractive() {
     queryKey: ["dash-chart"],
     queryFn: async () => {
       const res = await fetchApi(`${API_BASE_URL}/dashboard`);
-      // @ts-expect-error res unkown
+      // @ts-expect-error res unknown
       return res.chart;
     },
   });

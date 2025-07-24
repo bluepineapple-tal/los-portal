@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/constants";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -5,7 +6,7 @@ export function useSocket(namespace = "/realtime") {
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${namespace}`;
+    const url = `${API_BASE_URL}${namespace}`;
 
     const s = io(url, {
       withCredentials: true,
