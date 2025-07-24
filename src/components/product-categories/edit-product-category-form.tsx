@@ -68,6 +68,7 @@ export function EditProductCategoryForm({
       },
     );
     onSuccess(updated);
+    form.reset(updated);
   }
 
   return (

@@ -51,6 +51,7 @@ export function CreateProductCategoryForm() {
         title: "Product Category created successfully",
         description: newCat.name,
       });
+      form.reset();
       // Optionally, navigate somewhere or show a success message
     } catch (error) {
       toast({

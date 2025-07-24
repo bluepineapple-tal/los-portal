@@ -86,6 +86,7 @@ export function EditLoanOfferForm({
         description: updated.offer_name,
       });
       onSuccess(updated);
+      form.reset(updated);
     } catch (err) {
       console.error(err);
       toast({
